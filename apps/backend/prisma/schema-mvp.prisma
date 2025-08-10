@@ -1,0 +1,264 @@
+// Basket.fi MVP Prisma Schema
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String    @id @default(cuid())
+  walletAddress       String    @unique
+  email               String?   @unique
+  displayName         String?
+  role                Role      @default(USER)
+  emailNotifications  Boolean   @default(false)
+  pushNotifications   Boolean   @default(true)
+  language            String    @default("en")
+  currency            String    @default("USD")
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  deletedAt           DateTime?
+
+  // Relations
+  wallets      Wallet[]
+  baskets      Basket[]
+  rebalances   Rebalance[]
+  transactions Transaction[]
+  alerts       Alert[]
+
+  @@index([walletAddress])
+  @@index([email])
+  @@index([role])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Wallet {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  chainId   String
+  userId    String
+  provider  String   // "metamask", "walletconnect", etc.
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([address])
+  @@index([chainId])
+  @@map("wallets")
+}
+
+model Basket {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  totalValue  Decimal?  @db.Decimal(20, 8)
+  isPublic    Boolean   @default(false)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  // Relations
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  assets       BasketAsset[]
+  allocations  Allocation[]
+  rebalances   Rebalance[]
+  transactions Transaction[]
+  alerts       Alert[]
+
+  @@index([userId])
+  @@index([isPublic])
+  @@index([isActive])
+  @@index([createdAt])
+  @@map("baskets")
+}
+
+model BasketAsset {
+  id           String   @id @default(cuid())
+  basketId     String
+  tokenAddress String
+  symbol       String
+  name         String
+  decimals     Int
+  logoUri      String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  basket      Basket       @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  allocations Allocation[]
+  alerts      Alert[]
+
+  @@unique([basketId, tokenAddress])
+  @@index([tokenAddress])
+  @@index([symbol])
+  @@map("basket_assets")
+}
+
+model Allocation {
+  id                String  @id @default(cuid())
+  basketId          String
+  tokenAddress      String
+  targetPercentage  Decimal @db.Decimal(5, 2) // 0.00 to 100.00
+  currentPercentage Decimal @db.Decimal(5, 2) // 0.00 to 100.00
+  amount            Decimal @db.Decimal(20, 8)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relations
+  basket      Basket      @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  basketAsset BasketAsset @relation(fields: [basketId, tokenAddress], references: [basketId, tokenAddress], onDelete: Cascade)
+
+  @@unique([basketId, tokenAddress])
+  @@index([basketId])
+  @@index([tokenAddress])
+  @@map("allocations")
+}
+
+model Rebalance {
+  id              String           @id @default(cuid())
+  basketId        String
+  userId          String
+  status          RebalanceStatus  @default(PENDING)
+  totalValue      Decimal?         @db.Decimal(20, 8)
+  trades          Json             // Array of trade objects
+  estimatedGas    Decimal?         @db.Decimal(20, 8)
+  transactionHash String?
+  executedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  basket Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([basketId])
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("rebalances")
+}
+
+model Transaction {
+  id              String            @id @default(cuid())
+  userId          String
+  basketId        String?
+  type            TransactionType
+  status          TransactionStatus @default(PENDING)
+  amount          Decimal           @db.Decimal(20, 8)
+  tokenAddress    String
+  transactionHash String?           @unique
+  gasUsed         Decimal?          @db.Decimal(20, 8)
+  gasPrice        Decimal?          @db.Decimal(20, 8)
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // Relations
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  basket Basket? @relation(fields: [basketId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([basketId])
+  @@index([type])
+  @@index([status])
+  @@index([transactionHash])
+  @@index([createdAt])
+  @@map("transactions")
+}
+
+model PriceSnapshot {
+  id             String   @id @default(cuid())
+  tokenAddress   String
+  price          Decimal  @db.Decimal(20, 8)
+  volume24h      Decimal? @db.Decimal(20, 8)
+  marketCap      Decimal? @db.Decimal(20, 8)
+  priceChange24h Decimal? @db.Decimal(10, 4) // Percentage change
+  timestamp      DateTime
+  createdAt      DateTime @default(now())
+
+  @@unique([tokenAddress, timestamp])
+  @@index([tokenAddress])
+  @@index([timestamp])
+  @@index([createdAt])
+  @@map("price_snapshots")
+}
+
+model Alert {
+  id            String     @id @default(cuid())
+  userId        String
+  basketId      String?
+  tokenAddress  String?
+  type          AlertType
+  condition     AlertCondition
+  value         Decimal    @db.Decimal(20, 8)
+  isActive      Boolean    @default(true)
+  isTriggered   Boolean    @default(false)
+  lastTriggered DateTime?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  deletedAt     DateTime?
+
+  // Relations
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  basket      Basket?      @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  basketAsset BasketAsset? @relation(fields: [basketId, tokenAddress], references: [basketId, tokenAddress], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([basketId])
+  @@index([tokenAddress])
+  @@index([type])
+  @@index([isActive])
+  @@index([isTriggered])
+  @@map("alerts")
+}
+
+// Enums
+enum Role {
+  USER
+  ADMIN
+}
+
+enum RebalanceStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum TransactionType {
+  DEPOSIT
+  WITHDRAWAL
+  SWAP
+  REBALANCE
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+  CANCELLED
+}
+
+enum AlertType {
+  PRICE
+  PERCENTAGE_CHANGE
+  REBALANCE_NEEDED
+  PORTFOLIO_VALUE
+}
+
+enum AlertCondition {
+  ABOVE
+  BELOW
+  CHANGE_UP
+  CHANGE_DOWN
+}

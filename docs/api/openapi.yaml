@@ -1,0 +1,934 @@
+openapi: 3.1.0
+info:
+  title: Basket.fi API
+  version: 1.0.0
+  description: DeFi portfolio management platform API
+  contact:
+    name: Basket.fi Team
+    email: api@basket.fi
+
+servers:
+  - url: https://api.basket.fi/v1
+    description: Production server
+  - url: http://localhost:3001/api/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Authentication
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user with wallet signature
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh access token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+      responses:
+        '200':
+          description: Token refreshed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+
+  # Users
+  /users/me:
+    get:
+      tags: [Users]
+      summary: Get current user profile
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    
+    patch:
+      tags: [Users]
+      summary: Update user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  # Wallets
+  /wallets:
+    get:
+      tags: [Wallets]
+      summary: Get user wallets
+      responses:
+        '200':
+          description: List of wallets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Wallet'
+    
+    post:
+      tags: [Wallets]
+      summary: Add new wallet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWalletRequest'
+      responses:
+        '201':
+          description: Wallet created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Wallet'
+
+  # Baskets
+  /baskets:
+    get:
+      tags: [Baskets]
+      summary: Get user baskets
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: isPublic
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of baskets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBaskets'
+    
+    post:
+      tags: [Baskets]
+      summary: Create new basket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasketRequest'
+      responses:
+        '201':
+          description: Basket created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+
+  /baskets/{basketId}:
+    get:
+      tags: [Baskets]
+      summary: Get basket by ID
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+      responses:
+        '200':
+          description: Basket details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BasketWithAllocations'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    
+    patch:
+      tags: [Baskets]
+      summary: Update basket
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBasketRequest'
+      responses:
+        '200':
+          description: Basket updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+    
+    delete:
+      tags: [Baskets]
+      summary: Delete basket (soft delete)
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+      responses:
+        '204':
+          description: Basket deleted
+
+  /baskets/{basketId}/rebalance:
+    post:
+      tags: [Baskets]
+      summary: Initiate basket rebalance
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+        - name: idempotencyKey
+          in: header
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RebalanceRequest'
+      responses:
+        '202':
+          description: Rebalance initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rebalance'
+
+  # Allocations
+  /baskets/{basketId}/allocations:
+    get:
+      tags: [Allocations]
+      summary: Get basket allocations
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+      responses:
+        '200':
+          description: Basket allocations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Allocation'
+    
+    put:
+      tags: [Allocations]
+      summary: Update basket allocations
+      parameters:
+        - $ref: '#/components/parameters/BasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAllocationsRequest'
+      responses:
+        '200':
+          description: Allocations updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Allocation'
+
+  # Transactions
+  /transactions:
+    get:
+      tags: [Transactions]
+      summary: Get user transactions
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: basketId
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            $ref: '#/components/schemas/TransactionType'
+      responses:
+        '200':
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTransactions'
+
+  # Price Data
+  /prices/{tokenAddress}:
+    get:
+      tags: [Prices]
+      summary: Get token price history
+      security: []
+      parameters:
+        - name: tokenAddress
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: interval
+          in: query
+          schema:
+            type: string
+            enum: [1h, 1d, 1w]
+            default: 1d
+      responses:
+        '200':
+          description: Price history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PriceSnapshot'
+
+  # Alerts
+  /alerts:
+    get:
+      tags: [Alerts]
+      summary: Get user alerts
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: isActive
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List of alerts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedAlerts'
+    
+    post:
+      tags: [Alerts]
+      summary: Create new alert
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAlertRequest'
+      responses:
+        '201':
+          description: Alert created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+
+  /alerts/{alertId}:
+    patch:
+      tags: [Alerts]
+      summary: Update alert
+      parameters:
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlertRequest'
+      responses:
+        '200':
+          description: Alert updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alert'
+    
+    delete:
+      tags: [Alerts]
+      summary: Delete alert
+      parameters:
+        - name: alertId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Alert deleted
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    BasketId:
+      name: basketId
+      in: path
+      required: true
+      schema:
+        type: string
+    
+    Cursor:
+      name: cursor
+      in: query
+      schema:
+        type: string
+      description: Cursor for pagination
+    
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+
+  schemas:
+    # Auth Schemas
+    LoginRequest:
+      type: object
+      required: [walletAddress, signature, message]
+      properties:
+        walletAddress:
+          type: string
+        signature:
+          type: string
+        message:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+
+    # User Schemas
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        walletAddress:
+          type: string
+        email:
+          type: string
+          nullable: true
+        displayName:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/Role'
+        emailNotifications:
+          type: boolean
+        pushNotifications:
+          type: boolean
+        language:
+          type: string
+        currency:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        emailNotifications:
+          type: boolean
+        pushNotifications:
+          type: boolean
+        language:
+          type: string
+        currency:
+          type: string
+
+    # Wallet Schemas
+    Wallet:
+      type: object
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        chainId:
+          type: string
+        provider:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateWalletRequest:
+      type: object
+      required: [address, chainId, provider]
+      properties:
+        address:
+          type: string
+        chainId:
+          type: string
+        provider:
+          type: string
+
+    # Basket Schemas
+    Basket:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        totalValue:
+          type: string
+          nullable: true
+        isPublic:
+          type: boolean
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    BasketWithAllocations:
+      allOf:
+        - $ref: '#/components/schemas/Basket'
+        - type: object
+          properties:
+            allocations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Allocation'
+
+    CreateBasketRequest:
+      type: object
+      required: [name, allocations]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        isPublic:
+          type: boolean
+          default: false
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAllocationRequest'
+
+    UpdateBasketRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 500
+        isPublic:
+          type: boolean
+
+    # Allocation Schemas
+    Allocation:
+      type: object
+      properties:
+        id:
+          type: string
+        basketId:
+          type: string
+        tokenAddress:
+          type: string
+        targetPercentage:
+          type: string
+        currentPercentage:
+          type: string
+        amount:
+          type: string
+        basketAsset:
+          $ref: '#/components/schemas/BasketAsset'
+
+    CreateAllocationRequest:
+      type: object
+      required: [tokenAddress, targetPercentage]
+      properties:
+        tokenAddress:
+          type: string
+        targetPercentage:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    UpdateAllocationsRequest:
+      type: object
+      required: [allocations]
+      properties:
+        allocations:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAllocationRequest'
+
+    BasketAsset:
+      type: object
+      properties:
+        id:
+          type: string
+        tokenAddress:
+          type: string
+        symbol:
+          type: string
+        name:
+          type: string
+        decimals:
+          type: integer
+        logoUri:
+          type: string
+          nullable: true
+
+    # Rebalance Schemas
+    Rebalance:
+      type: object
+      properties:
+        id:
+          type: string
+        basketId:
+          type: string
+        status:
+          $ref: '#/components/schemas/RebalanceStatus'
+        totalValue:
+          type: string
+          nullable: true
+        trades:
+          type: array
+          items:
+            $ref: '#/components/schemas/Trade'
+        estimatedGas:
+          type: string
+          nullable: true
+        transactionHash:
+          type: string
+          nullable: true
+        executedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    RebalanceRequest:
+      type: object
+      properties:
+        dryRun:
+          type: boolean
+          default: false
+
+    Trade:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        amount:
+          type: string
+        estimatedGas:
+          type: string
+
+    # Transaction Schemas
+    Transaction:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          $ref: '#/components/schemas/TransactionType'
+        status:
+          $ref: '#/components/schemas/TransactionStatus'
+        amount:
+          type: string
+        tokenAddress:
+          type: string
+        transactionHash:
+          type: string
+          nullable: true
+        gasUsed:
+          type: string
+          nullable: true
+        gasPrice:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    # Price Schemas
+    PriceSnapshot:
+      type: object
+      properties:
+        id:
+          type: string
+        tokenAddress:
+          type: string
+        price:
+          type: string
+        volume24h:
+          type: string
+          nullable: true
+        marketCap:
+          type: string
+          nullable: true
+        priceChange24h:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          format: date-time
+
+    # Alert Schemas
+    Alert:
+      type: object
+      properties:
+        id:
+          type: string
+        basketId:
+          type: string
+          nullable: true
+        tokenAddress:
+          type: string
+          nullable: true
+        type:
+          $ref: '#/components/schemas/AlertType'
+        condition:
+          $ref: '#/components/schemas/AlertCondition'
+        value:
+          type: string
+        isActive:
+          type: boolean
+        isTriggered:
+          type: boolean
+        lastTriggered:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateAlertRequest:
+      type: object
+      required: [type, condition, value]
+      properties:
+        basketId:
+          type: string
+        tokenAddress:
+          type: string
+        type:
+          $ref: '#/components/schemas/AlertType'
+        condition:
+          $ref: '#/components/schemas/AlertCondition'
+        value:
+          type: number
+
+    UpdateAlertRequest:
+      type: object
+      properties:
+        condition:
+          $ref: '#/components/schemas/AlertCondition'
+        value:
+          type: number
+        isActive:
+          type: boolean
+
+    # Pagination Schemas
+    PaginatedBaskets:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Basket'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+
+    PaginatedTransactions:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+
+    PaginatedAlerts:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        pagination:
+          $ref: '#/components/schemas/PaginationInfo'
+
+    PaginationInfo:
+      type: object
+      properties:
+        hasNext:
+          type: boolean
+        nextCursor:
+          type: string
+          nullable: true
+        total:
+          type: integer
+
+    # Enums
+    Role:
+      type: string
+      enum: [USER, ADMIN]
+
+    RebalanceStatus:
+      type: string
+      enum: [PENDING, IN_PROGRESS, COMPLETED, FAILED, CANCELLED]
+
+    TransactionType:
+      type: string
+      enum: [DEPOSIT, WITHDRAWAL, SWAP, REBALANCE]
+
+    TransactionStatus:
+      type: string
+      enum: [PENDING, CONFIRMED, FAILED, CANCELLED]
+
+    AlertType:
+      type: string
+      enum: [PRICE, PERCENTAGE_CHANGE, REBALANCE_NEEDED, PORTFOLIO_VALUE]
+
+    AlertCondition:
+      type: string
+      enum: [ABOVE, BELOW, CHANGE_UP, CHANGE_DOWN]
+
+    # Error Schemas
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

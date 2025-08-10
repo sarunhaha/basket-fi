@@ -1,0 +1,120 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  walletAddress String   @unique
+  email         String?  @unique
+  displayName   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // User preferences
+  language      String @default("en")
+  currency      String @default("USD")
+  emailNotifications Boolean @default(false)
+  pushNotifications  Boolean @default(true)
+
+  // Relations
+  baskets       Basket[]
+  alerts        Alert[]
+
+  @@map("users")
+}
+
+model Basket {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  totalValue  String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId      String
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  allocations TokenAllocation[]
+  alerts      Alert[]
+
+  @@map("baskets")
+}
+
+model Token {
+  address     String  @id
+  symbol      String
+  name        String
+  decimals    Int
+  logoUri     String?
+  price       String?
+  priceChange24h Float?
+  marketCap   String?
+  volume24h   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  allocations     TokenAllocation[]
+  priceHistory    TokenPriceHistory[]
+  alerts          Alert[]
+
+  @@map("tokens")
+}
+
+model TokenAllocation {
+  id         String @id @default(cuid())
+  percentage Float
+  amount     String?
+
+  // Relations
+  basketId     String
+  basket       Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  tokenAddress String
+  token        Token  @relation(fields: [tokenAddress], references: [address], onDelete: Cascade)
+
+  @@unique([basketId, tokenAddress])
+  @@map("token_allocations")
+}
+
+model TokenPriceHistory {
+  id        String   @id @default(cuid())
+  price     String
+  volume    String?
+  timestamp DateTime @default(now())
+
+  // Relations
+  tokenAddress String
+  token        Token @relation(fields: [tokenAddress], references: [address], onDelete: Cascade)
+
+  @@unique([tokenAddress, timestamp])
+  @@map("token_price_history")
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  type      String   // "price", "percentage", "rebalance"
+  condition String   // "above", "below", "change"
+  value     String
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  userId       String
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  basketId     String?
+  basket       Basket? @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  tokenAddress String?
+  token        Token?  @relation(fields: [tokenAddress], references: [address], onDelete: Cascade)
+
+  @@map("alerts")
+}

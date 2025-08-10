@@ -1,0 +1,50 @@
+{
+  "detectors_to_exclude": [
+    "pragma",
+    "solc-version",
+    "low-level-calls",
+    "naming-convention"
+  ],
+  "detectors_to_include": [
+    "reentrancy-eth",
+    "reentrancy-no-eth",
+    "reentrancy-unlimited-gas",
+    "uninitialized-state",
+    "uninitialized-storage",
+    "arbitrary-send",
+    "controlled-delegatecall",
+    "delegatecall-loop",
+    "msg-value-loop",
+    "tx-origin",
+    "assembly",
+    "assert-state-change",
+    "boolean-equal",
+    "dangerous-unary",
+    "divide-before-multiply",
+    "reentrancy-benign",
+    "reentrancy-events",
+    "timestamp",
+    "assembly",
+    "assert-state-change",
+    "boolean-equal",
+    "dangerous-unary",
+    "divide-before-multiply",
+    "reentrancy-benign",
+    "reentrancy-events",
+    "timestamp"
+  ],
+  "exclude_informational": false,
+  "exclude_low": false,
+  "exclude_medium": false,
+  "exclude_high": false,
+  "json": "slither-report.json",
+  "exclude_dependencies": true,
+  "exclude_optimization": false,
+  "exclude_informational": false,
+  "filter_paths": [
+    "lib/",
+    "test/",
+    "script/"
+  ],
+  "compilation_skip": false
+}

@@ -1,0 +1,137 @@
+{
+  "auth": {
+    "signIn": {
+      "title": "Sign in to your account",
+      "subtitle": "Connect your wallet to access your DeFi portfolios",
+      "connectWallet": "Connect Wallet",
+      "walletDescription": "Use your Web3 wallet to sign in securely",
+      "connectMetaMask": "Connect with MetaMask",
+      "connecting": "Connecting...",
+      "signingIn": "Signing in...",
+      "error": "Failed to connect wallet. Please try again.",
+      "noWallet": "Don't have a wallet?",
+      "downloadMetaMask": "Download MetaMask",
+      "terms": "By connecting your wallet, you agree to our",
+      "termsOfService": "Terms of Service",
+      "and": "and",
+      "privacyPolicy": "Privacy Policy"
+    }
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "baskets": "Baskets",
+    "transactions": "Transactions",
+    "alerts": "Alerts",
+    "settings": "Settings"
+  },
+  "header": {
+    "toggleTheme": "Toggle theme",
+    "theme": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "profile": "Profile",
+    "settings": "Settings",
+    "signOut": "Sign out"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Overview of your DeFi portfolios and recent activity",
+    "stats": {
+      "totalValue": "Total Portfolio Value",
+      "activeBaskets": "Active Baskets",
+      "recentTransactions": "Recent Transactions",
+      "activeAlerts": "Active Alerts",
+      "last7Days": "Last 7 days"
+    },
+    "recentBaskets": {
+      "title": "Recent Baskets",
+      "viewAll": "View All",
+      "noBaskets": "No baskets yet",
+      "createFirst": "Create your first DeFi portfolio to get started",
+      "createBasket": "Create Basket",
+      "public": "Public",
+      "today": "Today",
+      "error": "Failed to load baskets"
+    }
+  },
+  "baskets": {
+    "title": "My Baskets",
+    "subtitle": "Manage your DeFi token portfolios",
+    "createBasket": "Create Basket",
+    "searchPlaceholder": "Search baskets...",
+    "sort": {
+      "recent": "Most Recent",
+      "name": "Name A-Z",
+      "value": "Highest Value",
+      "performance": "Best Performance"
+    },
+    "filter": {
+      "all": "All Baskets",
+      "active": "Active Only",
+      "public": "Public Only",
+      "private": "Private Only"
+    },
+    "public": "Public",
+    "inactive": "Inactive",
+    "totalValue": "Total Value",
+    "performance24h": "24h",
+    "lastUpdated": "Updated",
+    "actions": {
+      "view": "View Details",
+      "viewDetails": "View Details",
+      "edit": "Edit",
+      "rebalance": "Rebalance",
+      "delete": "Delete"
+    },
+    "empty": {
+      "title": "No baskets yet",
+      "description": "Create your first DeFi portfolio to get started"
+    },
+    "createFirst": "Create Your First Basket",
+    "error": {
+      "title": "Failed to load baskets",
+      "description": "Please try again later"
+    },
+    "create": {
+      "title": "Create New Basket",
+      "subtitle": "Build your custom DeFi portfolio",
+      "basicInfo": {
+        "title": "Basic Information",
+        "name": "Basket Name",
+        "namePlaceholder": "e.g., DeFi Blue Chips",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe your investment strategy...",
+        "descriptionHelp": "Optional. Help others understand your strategy.",
+        "public": "Make Public",
+        "publicHelp": "Allow others to view and copy your basket"
+      },
+      "allocations": {
+        "title": "Token Allocations",
+        "total": "Total",
+        "popular": "Popular Tokens",
+        "tokenAddress": "Token Address",
+        "percentage": "Percentage",
+        "addToken": "Add Token",
+        "warning": "Total allocation should equal 100%. Current total: {total}%"
+      },
+      "validation": {
+        "totalPercentage": "Total allocation must equal 100%. Current: {current}%"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "create": "Create Basket",
+        "creating": "Creating..."
+      },
+      "success": {
+        "title": "Basket created successfully",
+        "description": "Your new basket has been created"
+      },
+      "error": {
+        "title": "Failed to create basket",
+        "description": "Please try again"
+      }
+    }
+  }
+}

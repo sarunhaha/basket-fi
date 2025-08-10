@@ -1,0 +1,434 @@
+import { PrismaClient } from '@prisma/client';
+import { ethers } from 'ethers';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  console.log('🌱 Starting database seed...');
+
+  // Clean existing data
+  await prisma.alert.deleteMany();
+  await prisma.priceSnapshot.deleteMany();
+  await prisma.transaction.deleteMany();
+  await prisma.rebalance.deleteMany();
+  await prisma.allocation.deleteMany();
+  await prisma.basketAsset.deleteMany();
+  await prisma.basket.deleteMany();
+  await prisma.wallet.deleteMany();
+  await prisma.user.deleteMany();
+
+  // Create test users
+  const wallet1 = ethers.Wallet.createRandom();
+  const wallet2 = ethers.Wallet.createRandom();
+  const adminWallet = ethers.Wallet.createRandom();
+
+  const user1 = await prisma.user.create({
+    data: {
+      walletAddress: wallet1.address,
+      email: 'user1@basket.fi',
+      displayName: 'Alice Johnson',
+      language: 'en',
+      currency: 'USD',
+      emailNotifications: true,
+      pushNotifications: true,
+    },
+  });
+
+  const user2 = await prisma.user.create({
+    data: {
+      walletAddress: wallet2.address,
+      email: 'user2@basket.fi',
+      displayName: 'Bob Smith',
+      language: 'en',
+      currency: 'USD',
+      emailNotifications: false,
+      pushNotifications: true,
+    },
+  });
+
+  const adminUser = await prisma.user.create({
+    data: {
+      walletAddress: adminWallet.address,
+      email: 'admin@basket.fi',
+      displayName: 'Admin User',
+      role: 'ADMIN',
+      language: 'en',
+      currency: 'USD',
+    },
+  });
+
+  console.log('✅ Created users');
+
+  // Create wallets
+  await prisma.wallet.createMany({
+    data: [
+      {
+        address: wallet1.address,
+        chainId: '1',
+        userId: user1.id,
+        provider: 'metamask',
+        isActive: true,
+      },
+      {
+        address: wallet2.address,
+        chainId: '1',
+        userId: user2.id,
+        provider: 'walletconnect',
+        isActive: true,
+      },
+      {
+        address: adminWallet.address,
+        chainId: '1',
+        userId: adminUser.id,
+        provider: 'metamask',
+        isActive: true,
+      },
+    ],
+  });
+
+  console.log('✅ Created wallets');
+
+  // Popular token addresses (Ethereum mainnet)
+  const tokens = [
+    {
+      address: '0xA0b86a33E6441e6e80D0c4C6C7556C974E1B7F4D',
+      symbol: 'USDC',
+      name: 'USD Coin',
+      decimals: 6,
+      logoUri: 'https://assets.coingecko.com/coins/images/6319/thumb/USD_Coin_icon.png',
+    },
+    {
+      address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      symbol: 'WETH',
+      name: 'Wrapped Ether',
+      decimals: 18,
+      logoUri: 'https://assets.coingecko.com/coins/images/2518/thumb/weth.png',
+    },
+    {
+      address: '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599',
+      symbol: 'WBTC',
+      name: 'Wrapped BTC',
+      decimals: 8,
+      logoUri: 'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png',
+    },
+    {
+      address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
+      symbol: 'UNI',
+      name: 'Uniswap',
+      decimals: 18,
+      logoUri: 'https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png',
+    },
+    {
+      address: '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9',
+      symbol: 'AAVE',
+      name: 'Aave Token',
+      decimals: 18,
+      logoUri: 'https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png',
+    },
+  ];
+
+  // Create baskets
+  const basket1 = await prisma.basket.create({
+    data: {
+      name: 'DeFi Blue Chips',
+      description: 'A diversified portfolio of established DeFi tokens',
+      userId: user1.id,
+      totalValue: '10000.00',
+      isPublic: true,
+      isActive: true,
+    },
+  });
+
+  const basket2 = await prisma.basket.create({
+    data: {
+      name: 'Stablecoin Strategy',
+      description: 'Conservative portfolio focused on stablecoins and ETH',
+      userId: user1.id,
+      totalValue: '5000.00',
+      isPublic: false,
+      isActive: true,
+    },
+  });
+
+  const basket3 = await prisma.basket.create({
+    data: {
+      name: 'High Growth Portfolio',
+      description: 'Aggressive growth strategy with emerging DeFi tokens',
+      userId: user2.id,
+      totalValue: '15000.00',
+      isPublic: true,
+      isActive: true,
+    },
+  });
+
+  console.log('✅ Created baskets');
+
+  // Create basket assets and allocations for basket1 (DeFi Blue Chips)
+  const basket1Assets = [
+    { token: tokens[1], percentage: 40 }, // WETH
+    { token: tokens[3], percentage: 25 }, // UNI
+    { token: tokens[4], percentage: 20 }, // AAVE
+    { token: tokens[0], percentage: 15 }, // USDC
+  ];
+
+  for (const { token, percentage } of basket1Assets) {
+    const basketAsset = await prisma.basketAsset.create({
+      data: {
+        basketId: basket1.id,
+        tokenAddress: token.address,
+        symbol: token.symbol,
+        name: token.name,
+        decimals: token.decimals,
+        logoUri: token.logoUri,
+      },
+    });
+
+    await prisma.allocation.create({
+      data: {
+        basketId: basket1.id,
+        tokenAddress: token.address,
+        targetPercentage: percentage,
+        currentPercentage: percentage + (Math.random() - 0.5) * 2, // Slight drift
+        amount: (10000 * percentage / 100).toString(),
+      },
+    });
+  }
+
+  // Create basket assets and allocations for basket2 (Stablecoin Strategy)
+  const basket2Assets = [
+    { token: tokens[0], percentage: 60 }, // USDC
+    { token: tokens[1], percentage: 30 }, // WETH
+    { token: tokens[2], percentage: 10 }, // WBTC
+  ];
+
+  for (const { token, percentage } of basket2Assets) {
+    await prisma.basketAsset.create({
+      data: {
+        basketId: basket2.id,
+        tokenAddress: token.address,
+        symbol: token.symbol,
+        name: token.name,
+        decimals: token.decimals,
+        logoUri: token.logoUri,
+      },
+    });
+
+    await prisma.allocation.create({
+      data: {
+        basketId: basket2.id,
+        tokenAddress: token.address,
+        targetPercentage: percentage,
+        currentPercentage: percentage + (Math.random() - 0.5) * 1, // Slight drift
+        amount: (5000 * percentage / 100).toString(),
+      },
+    });
+  }
+
+  // Create basket assets and allocations for basket3 (High Growth)
+  const basket3Assets = [
+    { token: tokens[3], percentage: 35 }, // UNI
+    { token: tokens[4], percentage: 30 }, // AAVE
+    { token: tokens[1], percentage: 25 }, // WETH
+    { token: tokens[2], percentage: 10 }, // WBTC
+  ];
+
+  for (const { token, percentage } of basket3Assets) {
+    await prisma.basketAsset.create({
+      data: {
+        basketId: basket3.id,
+        tokenAddress: token.address,
+        symbol: token.symbol,
+        name: token.name,
+        decimals: token.decimals,
+        logoUri: token.logoUri,
+      },
+    });
+
+    await prisma.allocation.create({
+      data: {
+        basketId: basket3.id,
+        tokenAddress: token.address,
+        targetPercentage: percentage,
+        currentPercentage: percentage + (Math.random() - 0.5) * 3, // More drift
+        amount: (15000 * percentage / 100).toString(),
+      },
+    });
+  }
+
+  console.log('✅ Created basket assets and allocations');
+
+  // Create price snapshots (last 30 days)
+  const now = new Date();
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+  for (const token of tokens) {
+    const basePrice = Math.random() * 1000 + 100; // Random base price
+    
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(thirtyDaysAgo.getTime() + i * 24 * 60 * 60 * 1000);
+      const priceVariation = (Math.random() - 0.5) * 0.1; // ±5% daily variation
+      const price = basePrice * (1 + priceVariation * i * 0.01);
+      
+      await prisma.priceSnapshot.create({
+        data: {
+          tokenAddress: token.address,
+          price: price.toFixed(8),
+          volume24h: (Math.random() * 1000000).toFixed(8),
+          marketCap: (price * Math.random() * 1000000000).toFixed(8),
+          priceChange24h: (Math.random() - 0.5) * 10, // ±5% change
+          timestamp: date,
+        },
+      });
+    }
+  }
+
+  console.log('✅ Created price snapshots');
+
+  // Create sample transactions
+  await prisma.transaction.createMany({
+    data: [
+      {
+        userId: user1.id,
+        basketId: basket1.id,
+        type: 'DEPOSIT',
+        status: 'CONFIRMED',
+        amount: '1000.00',
+        tokenAddress: tokens[0].address,
+        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        gasUsed: '21000',
+        gasPrice: '20000000000',
+      },
+      {
+        userId: user1.id,
+        basketId: basket1.id,
+        type: 'SWAP',
+        status: 'CONFIRMED',
+        amount: '500.00',
+        tokenAddress: tokens[1].address,
+        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        gasUsed: '150000',
+        gasPrice: '25000000000',
+      },
+      {
+        userId: user2.id,
+        basketId: basket3.id,
+        type: 'REBALANCE',
+        status: 'PENDING',
+        amount: '2000.00',
+        tokenAddress: tokens[3].address,
+        gasUsed: '200000',
+        gasPrice: '30000000000',
+      },
+    ],
+  });
+
+  console.log('✅ Created transactions');
+
+  // Create sample rebalances
+  await prisma.rebalance.createMany({
+    data: [
+      {
+        basketId: basket1.id,
+        userId: user1.id,
+        status: 'COMPLETED',
+        totalValue: '10000.00',
+        trades: JSON.stringify([
+          {
+            from: tokens[0].address,
+            to: tokens[1].address,
+            amount: '200.00',
+            estimatedGas: '0.005',
+          },
+        ]),
+        estimatedGas: '0.005',
+        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        executedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
+      },
+      {
+        basketId: basket3.id,
+        userId: user2.id,
+        status: 'PENDING',
+        totalValue: '15000.00',
+        trades: JSON.stringify([
+          {
+            from: tokens[1].address,
+            to: tokens[3].address,
+            amount: '1000.00',
+            estimatedGas: '0.008',
+          },
+          {
+            from: tokens[2].address,
+            to: tokens[4].address,
+            amount: '500.00',
+            estimatedGas: '0.006',
+          },
+        ]),
+        estimatedGas: '0.014',
+      },
+    ],
+  });
+
+  console.log('✅ Created rebalances');
+
+  // Create sample alerts
+  await prisma.alert.createMany({
+    data: [
+      {
+        userId: user1.id,
+        basketId: basket1.id,
+        type: 'PORTFOLIO_VALUE',
+        condition: 'BELOW',
+        value: '9000.00',
+        isActive: true,
+        isTriggered: false,
+      },
+      {
+        userId: user1.id,
+        tokenAddress: tokens[1].address,
+        type: 'PRICE',
+        condition: 'ABOVE',
+        value: '2000.00',
+        isActive: true,
+        isTriggered: false,
+      },
+      {
+        userId: user2.id,
+        basketId: basket3.id,
+        type: 'REBALANCE_NEEDED',
+        condition: 'CHANGE_UP',
+        value: '5.00', // 5% drift threshold
+        isActive: true,
+        isTriggered: true,
+        lastTriggered: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
+      },
+    ],
+  });
+
+  console.log('✅ Created alerts');
+
+  console.log('🎉 Database seeded successfully!');
+  console.log(`
+📊 Created:
+- 3 users (including 1 admin)
+- 3 wallets
+- 3 baskets with allocations
+- 5 tokens with 30 days of price history
+- 3 transactions
+- 2 rebalances
+- 3 alerts
+
+🔑 Test accounts:
+- User 1: ${user1.walletAddress} (Alice Johnson)
+- User 2: ${user2.walletAddress} (Bob Smith)  
+- Admin: ${adminUser.walletAddress} (Admin User)
+  `);
+}
+
+main()
+  .catch((e) => {
+    console.error('❌ Seed failed:', e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

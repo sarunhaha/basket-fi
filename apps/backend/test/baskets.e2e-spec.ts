@@ -1,0 +1,349 @@
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication } from '@nestjs/common';
+import * as request from 'supertest';
+import { AppModule } from '../src/app.module';
+import { PrismaService } from '../src/prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
+import { ethers } from 'ethers';
+
+describe('Baskets (e2e)', () => {
+  let app: INestApplication;
+  let prisma: PrismaService;
+  let jwtService: JwtService;
+  let accessToken: string;
+  let userId: string;
+  let basketId: string;
+
+  beforeAll(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    prisma = moduleFixture.get<PrismaService>(PrismaService);
+    jwtService = moduleFixture.get<JwtService>(JwtService);
+
+    await app.init();
+
+    // Clean up database
+    await prisma.allocation.deleteMany();
+    await prisma.basketAsset.deleteMany();
+    await prisma.basket.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
+
+    // Create test user
+    const wallet = ethers.Wallet.createRandom();
+    const user = await prisma.user.create({
+      data: {
+        walletAddress: wallet.address,
+        displayName: 'Test User',
+      },
+    });
+
+    userId = user.id;
+    accessToken = jwtService.sign({
+      sub: user.id,
+      walletAddress: user.walletAddress,
+    });
+  });
+
+  afterAll(async () => {
+    // Clean up
+    await prisma.allocation.deleteMany();
+    await prisma.basketAsset.deleteMany();
+    await prisma.basket.deleteMany();
+    await prisma.wallet.deleteMany();
+    await prisma.user.deleteMany();
+    
+    await app.close();
+  });
+
+  describe('/baskets (POST)', () => {
+    it('should create a new basket', async () => {
+      const createBasketDto = {
+        name: 'Test Portfolio',
+        description: 'A test portfolio for e2e testing',
+        isPublic: false,
+        allocations: [
+          {
+            tokenAddress: '0xA0b86a33E6441e6e80D0c4C6C7556C974E1B7F4D',
+            targetPercentage: 60,
+          },
+          {
+            tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            targetPercentage: 40,
+          },
+        ],
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/baskets')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(createBasketDto)
+        .expect(201);
+
+      expect(response.body).toMatchObject({
+        name: createBasketDto.name,
+        description: createBasketDto.description,
+        isPublic: createBasketDto.isPublic,
+        userId: userId,
+      });
+
+      basketId = response.body.id;
+    });
+
+    it('should reject basket with invalid allocations', async () => {
+      const invalidBasketDto = {
+        name: 'Invalid Portfolio',
+        allocations: [
+          {
+            tokenAddress: '0xA0b86a33E6441e6e80D0c4C6C7556C974E1B7F4D',
+            targetPercentage: 60,
+          },
+          {
+            tokenAddress: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+            targetPercentage: 50, // Total = 110%
+          },
+        ],
+      };
+
+      await request(app.getHttpServer())
+        .post('/baskets')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(invalidBasketDto)
+        .expect(400);
+    });
+
+    it('should reject unauthorized requests', async () => {
+      const createBasketDto = {
+        name: 'Unauthorized Portfolio',
+        allocations: [],
+      };
+
+      await request(app.getHttpServer())
+        .post('/baskets')
+        .send(createBasketDto)
+        .expect(401);
+    });
+  });
+
+  describe('/baskets (GET)', () => {
+    it('should return user baskets with pagination', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/baskets')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ limit: 10 })
+        .expect(200);
+
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('pagination');
+      expect(response.body.data).toBeInstanceOf(Array);
+      expect(response.body.data.length).toBeGreaterThan(0);
+      expect(response.body.pagination).toMatchObject({
+        hasNext: expect.any(Boolean),
+        total: expect.any(Number),
+      });
+    });
+
+    it('should filter by public baskets', async () => {
+      // First create a public basket
+      await prisma.basket.create({
+        data: {
+          name: 'Public Portfolio',
+          userId: userId,
+          isPublic: true,
+        },
+      });
+
+      const response = await request(app.getHttpServer())
+        .get('/baskets')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .query({ isPublic: true })
+        .expect(200);
+
+      expect(response.body.data.every((basket: any) => basket.isPublic)).toBe(true);
+    });
+  });
+
+  describe('/baskets/:id (GET)', () => {
+    it('should return basket with allocations', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/baskets/${basketId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        id: basketId,
+        name: 'Test Portfolio',
+        userId: userId,
+      });
+      expect(response.body).toHaveProperty('allocations');
+      expect(response.body.allocations).toBeInstanceOf(Array);
+    });
+
+    it('should return 404 for non-existent basket', async () => {
+      await request(app.getHttpServer())
+        .get('/baskets/non-existent-id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
+    });
+
+    it('should return 403 for accessing other user\'s private basket', async () => {
+      // Create another user
+      const anotherWallet = ethers.Wallet.createRandom();
+      const anotherUser = await prisma.user.create({
+        data: {
+          walletAddress: anotherWallet.address,
+        },
+      });
+
+      // Create private basket for another user
+      const anotherBasket = await prisma.basket.create({
+        data: {
+          name: 'Private Portfolio',
+          userId: anotherUser.id,
+          isPublic: false,
+        },
+      });
+
+      await request(app.getHttpServer())
+        .get(`/baskets/${anotherBasket.id}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(403);
+    });
+  });
+
+  describe('/baskets/:id (PATCH)', () => {
+    it('should update basket', async () => {
+      const updateDto = {
+        name: 'Updated Test Portfolio',
+        description: 'Updated description',
+        isPublic: true,
+      };
+
+      const response = await request(app.getHttpServer())
+        .patch(`/baskets/${basketId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(updateDto)
+        .expect(200);
+
+      expect(response.body).toMatchObject(updateDto);
+    });
+
+    it('should return 404 for non-existent basket', async () => {
+      await request(app.getHttpServer())
+        .patch('/baskets/non-existent-id')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send({ name: 'Updated Name' })
+        .expect(404);
+    });
+  });
+
+  describe('/baskets/:id/rebalance (POST)', () => {
+    it('should initiate dry run rebalance', async () => {
+      const rebalanceDto = { dryRun: true };
+      const idempotencyKey = `rebalance-${Date.now()}`;
+
+      const response = await request(app.getHttpServer())
+        .post(`/baskets/${basketId}/rebalance`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Idempotency-Key', idempotencyKey)
+        .send(rebalanceDto)
+        .expect(202);
+
+      expect(response.body).toMatchObject({
+        basketId: basketId,
+        status: expect.any(String),
+      });
+      expect(response.body).toHaveProperty('trades');
+    });
+
+    it('should handle idempotency for duplicate requests', async () => {
+      const rebalanceDto = { dryRun: true };
+      const idempotencyKey = `duplicate-${Date.now()}`;
+
+      // First request
+      const response1 = await request(app.getHttpServer())
+        .post(`/baskets/${basketId}/rebalance`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Idempotency-Key', idempotencyKey)
+        .send(rebalanceDto)
+        .expect(202);
+
+      // Duplicate request with same idempotency key
+      const response2 = await request(app.getHttpServer())
+        .post(`/baskets/${basketId}/rebalance`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .set('Idempotency-Key', idempotencyKey)
+        .send(rebalanceDto)
+        .expect(202);
+
+      expect(response1.body.id).toBe(response2.body.id);
+    });
+
+    it('should require idempotency key', async () => {
+      const rebalanceDto = { dryRun: true };
+
+      await request(app.getHttpServer())
+        .post(`/baskets/${basketId}/rebalance`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .send(rebalanceDto)
+        .expect(400);
+    });
+  });
+
+  describe('/baskets/:id (DELETE)', () => {
+    it('should soft delete basket', async () => {
+      await request(app.getHttpServer())
+        .delete(`/baskets/${basketId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(204);
+
+      // Verify basket is soft deleted
+      const deletedBasket = await prisma.basket.findUnique({
+        where: { id: basketId },
+      });
+
+      expect(deletedBasket?.deletedAt).not.toBeNull();
+    });
+
+    it('should return 404 for already deleted basket', async () => {
+      await request(app.getHttpServer())
+        .delete(`/baskets/${basketId}`)
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(404);
+    });
+  });
+
+  describe('Rate Limiting', () => {
+    it('should enforce rate limits on basket creation', async () => {
+      const createBasketDto = {
+        name: 'Rate Limited Portfolio',
+        allocations: [
+          {
+            tokenAddress: '0xA0b86a33E6441e6e80D0c4C6C7556C974E1B7F4D',
+            targetPercentage: 100,
+          },
+        ],
+      };
+
+      // Make multiple rapid requests to trigger rate limit
+      const requests = Array(15).fill(null).map((_, i) =>
+        request(app.getHttpServer())
+          .post('/baskets')
+          .set('Authorization', `Bearer ${accessToken}`)
+          .send({ ...createBasketDto, name: `${createBasketDto.name} ${i}` })
+      );
+
+      const responses = await Promise.allSettled(requests);
+      const rateLimitedResponses = responses.filter(
+        (response) => 
+          response.status === 'fulfilled' && 
+          response.value.status === 429
+      );
+
+      expect(rateLimitedResponses.length).toBeGreaterThan(0);
+    });
+  });
+});

@@ -1,0 +1,1 @@
+module.exports = require("@basket-fi/config/prettier");

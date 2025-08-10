@@ -1,0 +1,137 @@
+{
+  "auth": {
+    "signIn": {
+      "title": "เข้าสู่ระบบบัญชีของคุณ",
+      "subtitle": "เชื่อมต่อกระเป๋าเงินของคุณเพื่อเข้าถึงพอร์ตโฟลิโอ DeFi",
+      "connectWallet": "เชื่อมต่อกระเป๋าเงิน",
+      "walletDescription": "ใช้กระเป๋าเงิน Web3 ของคุณเพื่อเข้าสู่ระบบอย่างปลอดภัย",
+      "connectMetaMask": "เชื่อมต่อด้วย MetaMask",
+      "connecting": "กำลังเชื่อมต่อ...",
+      "signingIn": "กำลังเข้าสู่ระบบ...",
+      "error": "ไม่สามารถเชื่อมต่อกระเป๋าเงินได้ กรุณาลองใหม่อีกครั้ง",
+      "noWallet": "ไม่มีกระเป๋าเงิน?",
+      "downloadMetaMask": "ดาวน์โหลด MetaMask",
+      "terms": "การเชื่อมต่อกระเป๋าเงินของคุณ หมายความว่าคุณยอมรับ",
+      "termsOfService": "ข้อกำหนดการใช้บริการ",
+      "and": "และ",
+      "privacyPolicy": "นโยบายความเป็นส่วนตัว"
+    }
+  },
+  "navigation": {
+    "dashboard": "แดชบอร์ด",
+    "baskets": "ตะกร้า",
+    "transactions": "ธุรกรรม",
+    "alerts": "การแจ้งเตือน",
+    "settings": "การตั้งค่า"
+  },
+  "header": {
+    "toggleTheme": "เปลี่ยนธีม",
+    "theme": {
+      "light": "สว่าง",
+      "dark": "มืด",
+      "system": "ระบบ"
+    },
+    "profile": "โปรไฟล์",
+    "settings": "การตั้งค่า",
+    "signOut": "ออกจากระบบ"
+  },
+  "dashboard": {
+    "title": "แดชบอร์ด",
+    "subtitle": "ภาพรวมของพอร์ตโฟลิโอ DeFi และกิจกรรมล่าสุดของคุณ",
+    "stats": {
+      "totalValue": "มูลค่าพอร์ตโฟลิโอรวม",
+      "activeBaskets": "ตะกร้าที่ใช้งาน",
+      "recentTransactions": "ธุรกรรมล่าสุด",
+      "activeAlerts": "การแจ้งเตือนที่ใช้งาน",
+      "last7Days": "7 วันที่ผ่านมา"
+    },
+    "recentBaskets": {
+      "title": "ตะกร้าล่าสุด",
+      "viewAll": "ดูทั้งหมด",
+      "noBaskets": "ยังไม่มีตะกร้า",
+      "createFirst": "สร้างพอร์ตโฟลิโอ DeFi แรกของคุณเพื่อเริ่มต้น",
+      "createBasket": "สร้างตะกร้า",
+      "public": "สาธารณะ",
+      "today": "วันนี้",
+      "error": "ไม่สามารถโหลดตะกร้าได้"
+    }
+  },
+  "baskets": {
+    "title": "ตะกร้าของฉัน",
+    "subtitle": "จัดการพอร์ตโฟลิโอโทเค็น DeFi ของคุณ",
+    "createBasket": "สร้างตะกร้า",
+    "searchPlaceholder": "ค้นหาตะกร้า...",
+    "sort": {
+      "recent": "ล่าสุด",
+      "name": "ชื่อ ก-ฮ",
+      "value": "มูลค่าสูงสุด",
+      "performance": "ผลตอบแทนดีที่สุด"
+    },
+    "filter": {
+      "all": "ตะกร้าทั้งหมด",
+      "active": "ใช้งานเท่านั้น",
+      "public": "สาธารณะเท่านั้น",
+      "private": "ส่วนตัวเท่านั้น"
+    },
+    "public": "สาธารณะ",
+    "inactive": "ไม่ใช้งาน",
+    "totalValue": "มูลค่ารวม",
+    "performance24h": "24 ชม.",
+    "lastUpdated": "อัปเดต",
+    "actions": {
+      "view": "ดูรายละเอียด",
+      "viewDetails": "ดูรายละเอียด",
+      "edit": "แก้ไข",
+      "rebalance": "ปรับสมดุล",
+      "delete": "ลบ"
+    },
+    "empty": {
+      "title": "ยังไม่มีตะกร้า",
+      "description": "สร้างพอร์ตโฟลิโอ DeFi แรกของคุณเพื่อเริ่มต้น"
+    },
+    "createFirst": "สร้างตะกร้าแรกของคุณ",
+    "error": {
+      "title": "ไม่สามารถโหลดตะกร้าได้",
+      "description": "กรุณาลองใหม่อีกครั้งในภายหลัง"
+    },
+    "create": {
+      "title": "สร้างตะกร้าใหม่",
+      "subtitle": "สร้างพอร์ตโฟลิโอ DeFi ที่กำหนดเอง",
+      "basicInfo": {
+        "title": "ข้อมูลพื้นฐาน",
+        "name": "ชื่อตะกร้า",
+        "namePlaceholder": "เช่น DeFi Blue Chips",
+        "description": "คำอธิบาย",
+        "descriptionPlaceholder": "อธิบายกลยุทธ์การลงทุนของคุณ...",
+        "descriptionHelp": "ไม่บังคับ ช่วยให้ผู้อื่นเข้าใจกลยุทธ์ของคุณ",
+        "public": "เปิดเป็นสาธารณะ",
+        "publicHelp": "อนุญาตให้ผู้อื่นดูและคัดลอกตะกร้าของคุณ"
+      },
+      "allocations": {
+        "title": "การจัดสรรโทเค็น",
+        "total": "รวม",
+        "popular": "โทเค็นยอดนิยม",
+        "tokenAddress": "ที่อยู่โทเค็น",
+        "percentage": "เปอร์เซ็นต์",
+        "addToken": "เพิ่มโทเค็น",
+        "warning": "การจัดสรรรวมควรเท่ากับ 100% รวมปัจจุบัน: {total}%"
+      },
+      "validation": {
+        "totalPercentage": "การจัดสรรรวมต้องเท่ากับ 100% ปัจจุบัน: {current}%"
+      },
+      "actions": {
+        "cancel": "ยกเลิก",
+        "create": "สร้างตะกร้า",
+        "creating": "กำลังสร้าง..."
+      },
+      "success": {
+        "title": "สร้างตะกร้าสำเร็จ",
+        "description": "ตะกร้าใหม่ของคุณถูกสร้างแล้ว"
+      },
+      "error": {
+        "title": "ไม่สามารถสร้างตะกร้าได้",
+        "description": "กรุณาลองใหม่อีกครั้ง"
+      }
+    }
+  }
+}

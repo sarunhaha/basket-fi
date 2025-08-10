@@ -1,0 +1,143 @@
+[
+  {
+    "type": "constructor",
+    "inputs": [
+      {"name": "_creationFee", "type": "uint256", "internalType": "uint256"},
+      {"name": "_feeRecipient", "type": "address", "internalType": "address"}
+    ],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createBasket",
+    "inputs": [
+      {
+        "name": "config",
+        "type": "tuple",
+        "internalType": "struct IBasketFactory.BasketConfig",
+        "components": [
+          {"name": "name", "type": "string", "internalType": "string"},
+          {"name": "symbol", "type": "string", "internalType": "string"},
+          {"name": "tokens", "type": "address[]", "internalType": "address[]"},
+          {"name": "weights", "type": "uint256[]", "internalType": "uint256[]"},
+          {"name": "managementFee", "type": "uint256", "internalType": "uint256"},
+          {"name": "isPublic", "type": "bool", "internalType": "bool"}
+        ]
+      }
+    ],
+    "outputs": [{"name": "basket", "type": "address", "internalType": "address"}],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "getBasket",
+    "inputs": [{"name": "basketId", "type": "uint256", "internalType": "uint256"}],
+    "outputs": [{"name": "", "type": "address", "internalType": "address"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getBasketCount",
+    "inputs": [],
+    "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getBasketInfo",
+    "inputs": [{"name": "basket", "type": "address", "internalType": "address"}],
+    "outputs": [
+      {
+        "name": "",
+        "type": "tuple",
+        "internalType": "struct IBasketFactory.BasketInfo",
+        "components": [
+          {"name": "basket", "type": "address", "internalType": "address"},
+          {"name": "creator", "type": "address", "internalType": "address"},
+          {"name": "name", "type": "string", "internalType": "string"},
+          {"name": "symbol", "type": "string", "internalType": "string"},
+          {"name": "totalSupply", "type": "uint256", "internalType": "uint256"},
+          {"name": "totalValue", "type": "uint256", "internalType": "uint256"},
+          {"name": "isPaused", "type": "bool", "internalType": "bool"},
+          {"name": "createdAt", "type": "uint256", "internalType": "uint256"}
+        ]
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getBasketsByCreator",
+    "inputs": [{"name": "creator", "type": "address", "internalType": "address"}],
+    "outputs": [{"name": "", "type": "address[]", "internalType": "address[]"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getCreationFee",
+    "inputs": [],
+    "outputs": [{"name": "", "type": "uint256", "internalType": "uint256"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getFeeRecipient",
+    "inputs": [],
+    "outputs": [{"name": "", "type": "address", "internalType": "address"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "isBasketValid",
+    "inputs": [{"name": "basket", "type": "address", "internalType": "address"}],
+    "outputs": [{"name": "", "type": "bool", "internalType": "bool"}],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "pauseBasket",
+    "inputs": [{"name": "basket", "type": "address", "internalType": "address"}],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "unpauseBasket",
+    "inputs": [{"name": "basket", "type": "address", "internalType": "address"}],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "event",
+    "name": "BasketCreated",
+    "inputs": [
+      {"name": "basket", "type": "address", "indexed": true, "internalType": "address"},
+      {"name": "creator", "type": "address", "indexed": true, "internalType": "address"},
+      {"name": "name", "type": "string", "indexed": false, "internalType": "string"},
+      {"name": "symbol", "type": "string", "indexed": false, "internalType": "string"},
+      {"name": "tokens", "type": "address[]", "indexed": false, "internalType": "address[]"},
+      {"name": "weights", "type": "uint256[]", "indexed": false, "internalType": "uint256[]"}
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "InvalidFee",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidTokenCount",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "InvalidWeights",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "WeightsSumNotHundred",
+    "inputs": []
+  }
+]
