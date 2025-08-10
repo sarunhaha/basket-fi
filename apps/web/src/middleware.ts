@@ -1,79 +1,56 @@
-import createMiddleware from 'next-intl/middleware';
+/**
+ * @fileoverview Next.js Middleware - จัดการ requests ก่อนถึง pages
+ * 
+ * Middleware นี้ทำหน้าที่:
+ * - เพิ่ม security headers
+ * - ข้าม middleware สำหรับ API routes และ static files
+ * - จัดการ routing และ authentication (ในอนาคต)
+ * 
+ * ทำงานก่อนที่ request จะถึง page components
+ */
+
 import { NextRequest, NextResponse } from 'next/server';
 
-const intlMiddleware = createMiddleware({
-  // A list of all locales that are supported
-  locales: ['en', 'th'],
-
-  // Used when no locale matches
-  defaultLocale: 'en',
-
-  // Don't use locale prefix for default locale
-  localePrefix: 'as-needed',
-});
-
+/**
+ * Middleware function - ประมวลผล requests ทั้งหมด
+ * 
+ * @param request - Next.js request object
+ * @returns NextResponse with modifications
+ */
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Handle API routes - skip internationalization
+  // ข้าม middleware สำหรับ API routes
   if (pathname.startsWith('/api/')) {
     return NextResponse.next();
   }
 
-  // Handle static files - skip internationalization
+  // ข้าม middleware สำหรับ static files
   if (
-    pathname.startsWith('/_next/') ||
-    pathname.startsWith('/favicon.ico') ||
-    pathname.startsWith('/robots.txt') ||
-    pathname.startsWith('/sitemap.xml') ||
-    pathname.includes('.')
+    pathname.startsWith('/_next/') ||      // Next.js internal files
+    pathname.startsWith('/favicon.ico') || // Favicon
+    pathname.startsWith('/robots.txt') ||  // SEO files
+    pathname.startsWith('/sitemap.xml') || // Sitemap
+    pathname.includes('.')                 // Files with extensions
   ) {
     return NextResponse.next();
   }
 
-  // Apply internationalization middleware
-  const response = intlMiddleware(request);
-
-  // Add security headers
-  response.headers.set('X-Frame-Options', 'DENY');
-  response.headers.set('X-Content-Type-Options', 'nosniff');
-  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  response.headers.set(
-    'Strict-Transport-Security',
-    'max-age=31536000; includeSubDomains'
-  );
-
-  // Add CSP header for security
-  const cspHeader = `
-    default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdn.jsdelivr.net;
-    style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https://assets.coingecko.com https://raw.githubusercontent.com https://logos.covalenthq.com;
-    font-src 'self';
-    object-src 'none';
-    base-uri 'self';
-    form-action 'self';
-    frame-ancestors 'none';
-    upgrade-insecure-requests;
-  `.replace(/\s{2,}/g, ' ').trim();
-
-  response.headers.set('Content-Security-Policy', cspHeader);
+  // เพิ่ม security headers สำหรับความปลอดภัย
+  const response = NextResponse.next();
+  response.headers.set('X-Frame-Options', 'DENY');                           // ป้องกัน clickjacking
+  response.headers.set('X-Content-Type-Options', 'nosniff');                // ป้องกัน MIME sniffing
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin'); // จำกัด referrer info
 
   return response;
 }
 
+/**
+ * Middleware configuration
+ * กำหนดว่า middleware จะทำงานกับ paths ไหนบ้าง
+ */
 export const config = {
-  // Match only internationalized pathnames
   matcher: [
-    // Enable a redirect to a matching locale at the root
-    '/',
-
-    // Set a cookie to remember the previous locale for
-    // all requests that have a locale prefix
-    '/(th|en)/:path*',
-
-    // Enable redirects that add missing locales
-    // (e.g. `/pathnames` -> `/en/pathnames`)
-    '/((?!_next|_vercel|.*\\..*).*)'
+    '/((?!_next|_vercel|.*\\..*).*)'  // ทำงานกับทุก path ยกเว้น internal files
   ]
 };

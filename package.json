@@ -1,6 +1,7 @@
 {
   "name": "basket-fi",
   "private": true,
+  "description": "Basket.fi - DeFi Portfolio Management Platform สำหรับการจัดการ token baskets และ automated rebalancing",
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",

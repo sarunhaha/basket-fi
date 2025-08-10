@@ -1,24 +1,62 @@
 /**
- * Authentication utilities for Web3 wallet integration
+ * @fileoverview Web3 Authentication - จัดการ wallet authentication
+ * 
+ * ไฟล์นี้จัดการ Web3 authentication ผ่าน wallet signatures:
+ * - รองรับ MetaMask และ Rabby wallet
+ * - ใช้ message signing แทน private key
+ * - จัดการ wallet events (account change, disconnect)
+ * - Auto-refresh tokens เมื่อหมดอายุ
+ * - Secure authentication flow
+ * 
+ * Flow: Connect Wallet → Sign Message → Get JWT Tokens → API Access
  */
 
-import { ethers } from 'ethers';
+import { createWalletClient, custom, getAddress } from 'viem';
+import { mainnet } from 'viem/chains';
 import { apiClient, setTokens, clearTokens, getTokens } from './api-client';
 
+/**
+ * Authentication State Interface
+ */
 export interface AuthState {
-  isAuthenticated: boolean;
-  user: any | null;
-  isLoading: boolean;
+  isAuthenticated: boolean;  // ผู้ใช้ login แล้วหรือไม่
+  user: any | null;          // ข้อมูลผู้ใช้
+  isLoading: boolean;        // กำลังโหลดข้อมูล auth
 }
 
-// Web3 wallet connection
+/**
+ * เชื่อมต่อ Web3 wallet (รองรับ MetaMask และ Rabby)
+ * 
+ * @returns Wallet address ที่เชื่อมต่อ
+ * @throws Error ถ้าไม่สามารถเชื่อมต่อได้
+ */
 export async function connectWallet(): Promise<string> {
-  if (typeof window === 'undefined' || !window.ethereum) {
-    throw new Error('MetaMask is not installed');
+  if (typeof window === 'undefined') {
+    throw new Error('Window is not available');
+  }
+
+  // ลอง Rabby wallet ก่อน (ถ้ามี)
+  if (window.rabby) {
+    try {
+      const accounts = await window.rabby.request({
+        method: 'eth_requestAccounts',
+      });
+
+      if (accounts && accounts.length > 0) {
+        return accounts[0];
+      }
+    } catch (error) {
+      console.warn('Failed to connect with Rabby, trying MetaMask:', error);
+    }
+  }
+
+  // Fallback ไป MetaMask/Ethereum provider
+  if (!window.ethereum) {
+    throw new Error('No wallet found. Please install MetaMask or Rabby wallet.');
   }
 
   try {
-    // Request account access
+    // ขอสิทธิ์เข้าถึง accounts
     const accounts = await window.ethereum.request({
       method: 'eth_requestAccounts',
     });
@@ -34,23 +72,36 @@ export async function connectWallet(): Promise<string> {
   }
 }
 
-// Sign message for authentication
+/**
+ * ลงนาม message สำหรับ authentication
+ * ใช้ wallet signature แทนการส่ง private key
+ * 
+ * @param address - Wallet address ที่ต้องการลงนาม
+ * @param message - ข้อความที่ต้องการลงนาม
+ * @returns Signature string
+ */
 export async function signMessage(address: string, message: string): Promise<string> {
   if (typeof window === 'undefined' || !window.ethereum) {
     throw new Error('MetaMask is not installed');
   }
 
   try {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
+    const walletClient = createWalletClient({
+      chain: mainnet,
+      transport: custom(window.ethereum)
+    });
     
-    // Ensure we're using the correct address
-    const signerAddress = await signer.getAddress();
-    if (signerAddress.toLowerCase() !== address.toLowerCase()) {
+    // Get accounts to verify address
+    const [account] = await walletClient.getAddresses();
+    if (!account || getAddress(account) !== getAddress(address)) {
       throw new Error('Address mismatch');
     }
 
-    const signature = await signer.signMessage(message);
+    const signature = await walletClient.signMessage({
+      account,
+      message
+    });
+    
     return signature;
   } catch (error) {
     console.error('Failed to sign message:', error);
@@ -58,7 +109,14 @@ export async function signMessage(address: string, message: string): Promise<str
   }
 }
 
-// Generate authentication message
+/**
+ * สร้าง authentication message สำหรับลงนาม
+ * Message จะมี wallet address, timestamp, และ nonce เพื่อความปลอดภัย
+ * 
+ * @param address - Wallet address
+ * @param nonce - Random nonce (optional)
+ * @returns Authentication message
+ */
 export function generateAuthMessage(address: string, nonce?: string): string {
   const timestamp = new Date().toISOString();
   const nonceStr = nonce || Math.random().toString(36).substring(2);
@@ -74,26 +132,31 @@ Nonce: ${nonceStr}
 This request will not trigger a blockchain transaction or cost any gas fees.`;
 }
 
-// Complete authentication flow
+/**
+ * Authentication flow ที่สมบูรณ์
+ * ทำทุกขั้นตอนตั้งแต่ connect wallet จนได้ JWT tokens
+ * 
+ * @returns Object ที่มี tokens และ user data
+ */
 export async function authenticateWallet(): Promise<{
   accessToken: string;
   refreshToken: string;
   user: any;
 }> {
   try {
-    // Connect wallet
+    // 1. เชื่อมต่อ wallet
     const address = await connectWallet();
     
-    // Generate message
+    // 2. สร้าง message สำหรับลงนาม
     const message = generateAuthMessage(address);
     
-    // Sign message
+    // 3. ลงนาม message
     const signature = await signMessage(address, message);
     
-    // Authenticate with backend
+    // 4. ส่งไป backend เพื่อ authenticate
     const response = await apiClient.login(address, signature, message);
     
-    // Store tokens
+    // 5. เก็บ tokens
     setTokens(response.accessToken, response.refreshToken);
     
     return response;
@@ -135,36 +198,39 @@ export async function getCurrentUser() {
   }
 }
 
-// Wallet event listeners
+/**
+ * ตั้งค่า event listeners สำหรับ wallet events
+ * จัดการเมื่อผู้ใช้เปลี่ยน account, chain, หรือ disconnect wallet
+ */
 export function setupWalletListeners() {
   if (typeof window === 'undefined' || !window.ethereum) {
     return;
   }
 
-  // Account changed
+  // เมื่อผู้ใช้เปลี่ยน account
   window.ethereum.on('accountsChanged', (accounts: string[]) => {
     if (accounts.length === 0) {
-      // User disconnected wallet
+      // ผู้ใช้ disconnect wallet
       logout();
       window.location.href = '/sign-in';
     } else {
-      // User switched accounts - might need to re-authenticate
+      // ผู้ใช้เปลี่ยน account - อาจต้อง re-authenticate
       const currentUser = getCurrentUser();
       if (currentUser) {
-        // Check if the new account matches the authenticated user
-        // If not, logout and redirect to sign-in
+        // ตรวจสอบว่า account ใหม่ตรงกับ user ที่ login อยู่หรือไม่
+        // ถ้าไม่ตรงให้ logout และไปหน้า sign-in
         window.location.reload();
       }
     }
   });
 
-  // Chain changed
+  // เมื่อผู้ใช้เปลี่ยน blockchain network
   window.ethereum.on('chainChanged', (chainId: string) => {
-    // Reload the page when chain changes
+    // Reload หน้าเมื่อเปลี่ยน chain
     window.location.reload();
   });
 
-  // Disconnect
+  // เมื่อ wallet disconnect
   window.ethereum.on('disconnect', () => {
     logout();
     window.location.href = '/sign-in';
@@ -178,7 +244,7 @@ export function initializeAuth() {
   }
 }
 
-// Types for window.ethereum
+// Types for window.ethereum and window.rabby
 declare global {
   interface Window {
     ethereum?: {
@@ -186,6 +252,12 @@ declare global {
       on: (event: string, callback: (...args: any[]) => void) => void;
       removeListener: (event: string, callback: (...args: any[]) => void) => void;
       isMetaMask?: boolean;
+    };
+    rabby?: {
+      isRabby: boolean;
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
     };
   }
 }

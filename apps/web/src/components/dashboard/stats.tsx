@@ -1,9 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@basket-fi/ui';
+import { Badge } from '@basket-fi/ui';
 import { apiClient } from '@/lib/api-client';
 import { 
   TrendingUp, 
@@ -15,7 +14,6 @@ import {
 } from 'lucide-react';
 
 export function DashboardStats() {
-  const t = useTranslations('dashboard.stats');
 
   // Fetch user's baskets to calculate stats
   const { data: basketsData } = useQuery({
@@ -54,7 +52,7 @@ export function DashboardStats() {
 
   const stats = [
     {
-      title: t('totalValue', { default: 'Total Portfolio Value' }),
+      title: 'Total Portfolio Value',
       value: `$${totalValue.toLocaleString('en-US', { 
         minimumFractionDigits: 2,
         maximumFractionDigits: 2 
@@ -64,19 +62,19 @@ export function DashboardStats() {
       icon: Wallet,
     },
     {
-      title: t('activeBaskets', { default: 'Active Baskets' }),
+      title: 'Active Baskets',
       value: activeBaskets.toString(),
       subtitle: `${baskets.length} total`,
       icon: FolderOpen,
     },
     {
-      title: t('recentTransactions', { default: 'Recent Transactions' }),
+      title: 'Recent Transactions',
       value: recentTransactions.toString(),
-      subtitle: t('last7Days', { default: 'Last 7 days' }),
+      subtitle: 'Last 7 days',
       icon: ArrowLeftRight,
     },
     {
-      title: t('activeAlerts', { default: 'Active Alerts' }),
+      title: 'Active Alerts',
       value: activeAlertsCount.toString(),
       subtitle: alerts.length > 0 ? `${alerts.filter(a => a.isTriggered).length} triggered` : undefined,
       icon: AlertTriangle,

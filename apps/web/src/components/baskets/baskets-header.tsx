@@ -1,21 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Button, Input, Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@basket-fi/ui';
 import { Plus, Search, Filter } from 'lucide-react';
 
 export function BasketsHeader() {
-  const t = useTranslations('baskets');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('recent');
   const [filterBy, setFilterBy] = useState('all');
@@ -26,16 +16,16 @@ export function BasketsHeader() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {t('title', { default: 'My Baskets' })}
+            My Baskets
           </h1>
           <p className="text-muted-foreground">
-            {t('subtitle', { default: 'Manage your DeFi token portfolios' })}
+            Manage your DeFi token portfolios
           </p>
         </div>
         <Button asChild>
           <Link href="/baskets/create">
             <Plus className="h-4 w-4 mr-2" />
-            {t('createBasket', { default: 'Create Basket' })}
+            Create Basket
           </Link>
         </Button>
       </div>
@@ -46,7 +36,7 @@ export function BasketsHeader() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder={t('searchPlaceholder', { default: 'Search baskets...' })}
+            placeholder="Search baskets..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
@@ -60,16 +50,16 @@ export function BasketsHeader() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="recent">
-              {t('sort.recent', { default: 'Most Recent' })}
+              Most Recent
             </SelectItem>
             <SelectItem value="name">
-              {t('sort.name', { default: 'Name A-Z' })}
+              Name A-Z
             </SelectItem>
             <SelectItem value="value">
-              {t('sort.value', { default: 'Highest Value' })}
+              Highest Value
             </SelectItem>
             <SelectItem value="performance">
-              {t('sort.performance', { default: 'Best Performance' })}
+              Best Performance
             </SelectItem>
           </SelectContent>
         </Select>
@@ -82,16 +72,16 @@ export function BasketsHeader() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">
-              {t('filter.all', { default: 'All Baskets' })}
+              All Baskets
             </SelectItem>
             <SelectItem value="active">
-              {t('filter.active', { default: 'Active Only' })}
+              Active Only
             </SelectItem>
             <SelectItem value="public">
-              {t('filter.public', { default: 'Public Only' })}
+              Public Only
             </SelectItem>
             <SelectItem value="private">
-              {t('filter.private', { default: 'Private Only' })}
+              Private Only
             </SelectItem>
           </SelectContent>
         </Select>

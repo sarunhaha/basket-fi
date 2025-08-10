@@ -1,6 +1,14 @@
 /**
- * API Client generated from OpenAPI spec
- * Provides type-safe API calls for Basket.fi
+ * @fileoverview API Client - Type-safe API calls สำหรับ Basket.fi
+ * 
+ * ไฟล์นี้เป็น HTTP client ที่:
+ * - ใช้ Zod schemas สำหรับ type safety และ runtime validation
+ * - จัดการ authentication tokens (access + refresh)
+ * - Handle errors และ retry logic
+ * - Support pagination และ filtering
+ * - Auto-refresh expired tokens
+ * 
+ * Generated จาก OpenAPI spec ของ backend API
  */
 
 import { z } from 'zod';
@@ -8,10 +16,18 @@ import { z } from 'zod';
 // Base configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
-// Auth token management
+/**
+ * Authentication Token Management
+ * จัดการ access token และ refresh token สำหรับ API authentication
+ */
+
+// In-memory token storage
 let accessToken: string | null = null;
 let refreshToken: string | null = null;
 
+/**
+ * เก็บ tokens ทั้งใน memory และ localStorage
+ */
 export const setTokens = (access: string, refresh: string) => {
   accessToken = access;
   refreshToken = refresh;
@@ -21,6 +37,9 @@ export const setTokens = (access: string, refresh: string) => {
   }
 };
 
+/**
+ * ลบ tokens ทั้งจาก memory และ localStorage
+ */
 export const clearTokens = () => {
   accessToken = null;
   refreshToken = null;
@@ -30,6 +49,9 @@ export const clearTokens = () => {
   }
 };
 
+/**
+ * ดึง tokens จาก memory หรือ localStorage
+ */
 export const getTokens = () => {
   if (typeof window !== 'undefined' && !accessToken) {
     accessToken = localStorage.getItem('accessToken');
@@ -38,7 +60,15 @@ export const getTokens = () => {
   return { accessToken, refreshToken };
 };
 
-// Schemas (from OpenAPI spec)
+/**
+ * Zod Schemas สำหรับ API Response Validation
+ * Schemas เหล่านี้ generate จาก OpenAPI spec ของ backend
+ * ใช้สำหรับ type safety และ runtime validation
+ */
+
+/**
+ * User Schema - ข้อมูลผู้ใช้
+ */
 export const UserSchema = z.object({
   id: z.string(),
   walletAddress: z.string(),
@@ -53,17 +83,23 @@ export const UserSchema = z.object({
   updatedAt: z.string(),
 });
 
+/**
+ * Basket Schema - ข้อมูล token basket
+ */
 export const BasketSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  description: z.string().nullable(),
-  totalValue: z.string().nullable(),
-  isPublic: z.boolean(),
-  isActive: z.boolean(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  id: z.string(),                          // Unique basket ID
+  name: z.string(),                        // ชื่อ basket
+  description: z.string().nullable(),      // คำอธิบาย (optional)
+  totalValue: z.string().nullable(),       // มูลค่ารวม (USD)
+  isPublic: z.boolean(),                   // แชร์ให้คนอื่นดูได้หรือไม่
+  isActive: z.boolean(),                   // basket ใช้งานอยู่หรือไม่
+  createdAt: z.string(),                   // วันที่สร้าง
+  updatedAt: z.string(),                   // วันที่แก้ไขล่าสุด
 });
 
+/**
+ * Allocation Schema - การกระจาย token ใน basket
+ */
 export const AllocationSchema = z.object({
   id: z.string(),
   basketId: z.string(),
@@ -143,21 +179,34 @@ export type Alert = z.infer<typeof AlertSchema>;
 export type Rebalance = z.infer<typeof RebalanceSchema>;
 export type Pagination = z.infer<typeof PaginationSchema>;
 
-// API Error types
+/**
+ * Custom API Error Class
+ * ใช้สำหรับ handle errors จาก API calls
+ */
 export class ApiError extends Error {
   constructor(
-    public status: number,
-    public code: string,
-    message: string,
-    public details?: any
+    public status: number,      // HTTP status code
+    public code: string,        // Error code จาก backend
+    message: string,            // Error message
+    public details?: any        // Additional error details
   ) {
     super(message);
     this.name = 'ApiError';
   }
 }
 
-// HTTP client with auth and error handling
+/**
+ * HTTP Client Class
+ * จัดการ API calls พร้อม authentication และ error handling
+ */
 class ApiClient {
+  /**
+   * Generic request method พร้อม type safety
+   * 
+   * @param endpoint - API endpoint path
+   * @param options - Fetch options
+   * @param schema - Zod schema สำหรับ validate response
+   */
   private async request<T>(
     endpoint: string,
     options: RequestInit = {},

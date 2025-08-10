@@ -1,20 +1,34 @@
 /**
- * Mobile API Client for Basket.fi
- * Extends the web API client with mobile-specific features
+ * @fileoverview Mobile API Client - Type-safe API client สำหรับ Mobile App
+ * 
+ * ไฟล์นี้เป็น HTTP client สำหรับ React Native ที่:
+ * - ใช้ Expo SecureStore สำหรับเก็บ tokens อย่างปลอดภัย
+ * - ตรวจสอบ network connectivity ก่อนทำ API calls
+ * - จัดการ offline scenarios
+ * - รองรับ mobile-specific error handling
+ * - Auto-refresh expired tokens
+ * 
+ * Extends web API client พร้อม mobile-specific features
  */
 
 import { z } from 'zod';
-import * as SecureStore from 'expo-secure-store';
-import NetInfo from '@react-native-community/netinfo';
+import * as SecureStore from 'expo-secure-store';        // Secure token storage
+import NetInfo from '@react-native-community/netinfo';  // Network connectivity
 
 // Base configuration
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
-// Token management with secure storage
+/**
+ * Token Manager - จัดการ authentication tokens อย่างปลอดภัย
+ * ใช้ Expo SecureStore แทน localStorage เพื่อความปลอดภัยสูงสุด
+ */
 class TokenManager {
   private static readonly ACCESS_TOKEN_KEY = 'access_token';
   private static readonly REFRESH_TOKEN_KEY = 'refresh_token';
 
+  /**
+   * เก็บ tokens ใน secure storage
+   */
   static async setTokens(accessToken: string, refreshToken: string): Promise<void> {
     await Promise.all([
       SecureStore.setItemAsync(this.ACCESS_TOKEN_KEY, accessToken),
@@ -22,14 +36,23 @@ class TokenManager {
     ]);
   }
 
+  /**
+   * ดึง access token จาก secure storage
+   */
   static async getAccessToken(): Promise<string | null> {
     return await SecureStore.getItemAsync(this.ACCESS_TOKEN_KEY);
   }
 
+  /**
+   * ดึง refresh token จาก secure storage
+   */
   static async getRefreshToken(): Promise<string | null> {
     return await SecureStore.getItemAsync(this.REFRESH_TOKEN_KEY);
   }
 
+  /**
+   * ลบ tokens ทั้งหมดจาก secure storage
+   */
   static async clearTokens(): Promise<void> {
     await Promise.all([
       SecureStore.deleteItemAsync(this.ACCESS_TOKEN_KEY),
@@ -125,19 +148,29 @@ export type Transaction = z.infer<typeof TransactionSchema>;
 export type Alert = z.infer<typeof AlertSchema>;
 export type Pagination = z.infer<typeof PaginationSchema>;
 
-// API Error types
+/**
+ * Custom Error Classes สำหรับ Mobile App
+ */
+
+/**
+ * API Error - errors จาก backend API
+ */
 export class ApiError extends Error {
   constructor(
-    public status: number,
-    public code: string,
-    message: string,
-    public details?: any
+    public status: number,      // HTTP status code
+    public code: string,        // Error code จาก backend
+    message: string,            // Error message
+    public details?: any        // Additional error details
   ) {
     super(message);
     this.name = 'ApiError';
   }
 }
 
+/**
+ * Network Error - errors เกี่ยวกับ network connectivity
+ * เฉพาะสำหรับ mobile app ที่อาจมีปัญหา network
+ */
 export class NetworkError extends Error {
   constructor(message: string = 'Network request failed') {
     super(message);
@@ -145,8 +178,15 @@ export class NetworkError extends Error {
   }
 }
 
-// Mobile-specific API client
+/**
+ * Mobile API Client Class
+ * จัดการ API calls พร้อม mobile-specific features
+ */
 class MobileApiClient {
+  /**
+   * ตรวจสอบ network connectivity ก่อนทำ API calls
+   * สำคัญสำหรับ mobile apps ที่อาจมีปัญหา network
+   */
   private async checkNetworkConnection(): Promise<boolean> {
     const netInfo = await NetInfo.fetch();
     return netInfo.isConnected ?? false;

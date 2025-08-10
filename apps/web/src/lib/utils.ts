@@ -1,10 +1,33 @@
+/**
+ * @fileoverview Web App Utilities - Utility functions สำหรับ Web App
+ * 
+ * ไฟล์นี้รวม utility functions ที่ใช้เฉพาะใน Web App:
+ * - cn: ClassName merging (เหมือนกับใน packages/utils)
+ * - formatCurrency: Format เงินตรา
+ * - formatPercentage: Format เปอร์เซ็นต์
+ * - formatAddress: Format Ethereum addresses
+ * - formatDate/formatRelativeTime: Format วันที่และเวลา
+ * - debounce/throttle: Performance utilities
+ * - copyToClipboard: Copy ข้อความไปยัง clipboard
+ * 
+ * บางฟังก์ชันอาจซ้ำกับ packages/utils แต่มี customization เพิ่มเติม
+ */
+
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
+/**
+ * Combine และ merge CSS classes อย่างชาญฉลาด
+ * เหมือนกับใน packages/utils แต่อยู่ใน web app เพื่อความสะดวก
+ */
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/**
+ * Format จำนวนเงินเป็นรูปแบบสกุลเงิน
+ * รองรับ internationalization สำหรับหลายภาษา
+ */
 export function formatCurrency(
   amount: number | string,
   currency: string = 'USD',
@@ -78,6 +101,10 @@ export function formatRelativeTime(
   }
 }
 
+/**
+ * Debounce function - รอให้หยุดเรียกก่อนจะ execute
+ * ใช้สำหรับ search input, API calls ที่ไม่ต้องการเรียกบ่อยๆ
+ */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number
@@ -90,6 +117,10 @@ export function debounce<T extends (...args: any[]) => any>(
   };
 }
 
+/**
+ * Throttle function - จำกัดการเรียกให้ไม่เกิน 1 ครั้งต่อช่วงเวลา
+ * ใช้สำหรับ scroll events, resize events
+ */
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   limit: number
@@ -118,11 +149,16 @@ export function truncateText(text: string, maxLength: number): string {
   return text.slice(0, maxLength) + '...';
 }
 
+/**
+ * Copy ข้อความไปยัง clipboard
+ * รองรับ modern browsers และ fallback สำหรับ browsers เก่า
+ */
 export function copyToClipboard(text: string): Promise<void> {
+  // ใช้ modern Clipboard API ถ้าใช้ได้
   if (navigator.clipboard && window.isSecureContext) {
     return navigator.clipboard.writeText(text);
   } else {
-    // Fallback for older browsers
+    // Fallback สำหรับ browsers เก่า
     const textArea = document.createElement('textarea');
     textArea.value = text;
     textArea.style.position = 'fixed';

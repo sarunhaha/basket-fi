@@ -1,13 +1,32 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useAnalytics } from './useAnalytics';
-import { apiClient } from '../lib/api-client';
-import type { Basket, BasketWithAllocations } from '../types/api';
+/**
+ * @fileoverview useBaskets Hook - จัดการ baskets สำหรับ Mobile App
+ * 
+ * Hooks เหล่านี้จัดการ:
+ * - ดึงข้อมูล baskets ทั้งหมด
+ * - สร้าง, แก้ไข, ลบ baskets
+ * - Rebalancing baskets
+ * - Optimistic updates สำหรับ UX ที่ดี
+ * - Analytics tracking
+ * - Cache management
+ * 
+ * รองรับ mobile-specific patterns เช่น pull-to-refresh
+ */
 
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useAnalytics } from './useAnalytics';                    // Analytics tracking
+import { apiClient } from '../lib/api-client';                   // API client
+import type { Basket, BasketWithAllocations } from '../types/api'; // Type definitions
+
+/**
+ * useBaskets Hook - จัดการ baskets ทั้งหมด
+ * 
+ * @returns Object ที่มี baskets data, loading states, และ CRUD actions
+ */
 export function useBaskets() {
   const queryClient = useQueryClient();
-  const { track } = useAnalytics();
+  const { track } = useAnalytics();  // Analytics tracking
 
-  // Get all baskets
+  // Query สำหรับดึงข้อมูล baskets ทั้งหมด
   const {
     data: basketsData,
     isLoading,
@@ -134,11 +153,17 @@ export function useBaskets() {
   };
 }
 
+/**
+ * useBasket Hook - จัดการ basket เดี่ยว
+ * 
+ * @param basketId - ID ของ basket ที่ต้องการ
+ * @returns Object ที่มี basket data และ rebalance actions
+ */
 export function useBasket(basketId: string) {
   const queryClient = useQueryClient();
   const { track } = useAnalytics();
 
-  // Get individual basket
+  // Query สำหรับดึงข้อมูล basket เดี่ยว
   const {
     data: basket,
     isLoading,
@@ -193,10 +218,20 @@ export function useBasket(basketId: string) {
   };
 }
 
-// Hook for optimistic updates
+/**
+ * useOptimisticBaskets Hook - จัดการ optimistic updates
+ * 
+ * ใช้สำหรับอัพเดท UI ทันทีก่อนที่ API call จะเสร็จ
+ * ทำให้ UX รู้สึกเร็วขึ้น
+ * 
+ * @returns Object ที่มี optimistic update functions
+ */
 export function useOptimisticBaskets() {
   const queryClient = useQueryClient();
 
+  /**
+   * อัพเดท basket ใน cache ทันที (optimistic)
+   */
   const optimisticUpdate = (basketId: string, updates: Partial<Basket>) => {
     queryClient.setQueryData(['baskets'], (old: any) => ({
       ...old,
@@ -206,6 +241,9 @@ export function useOptimisticBaskets() {
     }));
   };
 
+  /**
+   * Revert optimistic update ถ้า API call ล้มเหลว
+   */
   const revertOptimisticUpdate = () => {
     queryClient.invalidateQueries({ queryKey: ['baskets'] });
   };

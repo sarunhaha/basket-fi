@@ -1,6 +1,4 @@
-const createNextIntlPlugin = require('next-intl/plugin');
-
-const withNextIntl = createNextIntlPlugin();
+// Removed next-intl for now
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -46,22 +44,16 @@ const nextConfig = {
     ];
   },
 
-  // Redirects
+  // Redirects - removed dashboard redirect for now
   async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/dashboard',
-        permanent: false,
-      },
-    ];
+    return [];
   },
 
   // Environment variables validation
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID,
-    NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1',
+    NEXT_PUBLIC_CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID || '10143',
+    NEXT_PUBLIC_INFURA_ID: process.env.NEXT_PUBLIC_INFURA_ID || '',
   },
 
   // Webpack configuration
@@ -99,4 +91,4 @@ const nextConfig = {
   poweredByHeader: false,
 };
 
-module.exports = withNextIntl(nextConfig);
+module.exports = nextConfig;

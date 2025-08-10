@@ -1,18 +1,36 @@
+/**
+ * @fileoverview useAuth Hook - จัดการ authentication สำหรับ Mobile App
+ * 
+ * Hook นี้จัดการ:
+ * - Web3 wallet authentication
+ * - Biometric authentication (Face ID, Touch ID, Fingerprint)
+ * - Token management และ auto-refresh
+ * - Login/logout flows
+ * - Navigation after auth state changes
+ * 
+ * รองรับ mobile-specific features เช่น biometric authentication
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import * as LocalAuthentication from 'expo-local-authentication';
-import { router } from 'expo-router';
+import * as LocalAuthentication from 'expo-local-authentication';  // Biometric auth
+import { router } from 'expo-router';                              // Navigation
 
-import { apiClient, TokenManager } from '../lib/api-client';
-import { useWallet } from '../lib/wallet-provider';
-import { useAnalytics } from './useAnalytics';
-import type { User } from '../types/api';
+import { apiClient, TokenManager } from '../lib/api-client';       // API client
+import { useWallet } from '../lib/wallet-provider';               // Wallet connection
+import { useAnalytics } from './useAnalytics';                    // Analytics tracking
+import type { User } from '../types/api';                         // Type definitions
 
+/**
+ * useAuth Hook - จัดการ authentication state และ actions
+ * 
+ * @returns Object ที่มี user data, loading states, และ auth actions
+ */
 export function useAuth() {
   const queryClient = useQueryClient();
-  const { address, signMessage, isConnected } = useWallet();
-  const { track } = useAnalytics();
+  const { address, signMessage, isConnected } = useWallet();  // Wallet connection
+  const { track } = useAnalytics();                           // Analytics tracking
 
-  // Query for current user
+  // Query สำหรับดึงข้อมูล current user
   const {
     data: user,
     isLoading,
@@ -36,23 +54,30 @@ export function useAuth() {
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  // Biometric authentication
+  /**
+   * Biometric Authentication - ใช้ Face ID, Touch ID, หรือ Fingerprint
+   * 
+   * @returns Promise<boolean> - true ถ้า authentication สำเร็จ
+   */
   const authenticateWithBiometrics = async (): Promise<boolean> => {
     try {
+      // ตรวจสอบว่าอุปกรณ์มี biometric hardware หรือไม่
       const hasHardware = await LocalAuthentication.hasHardwareAsync();
       if (!hasHardware) {
         throw new Error('Biometric hardware not available');
       }
 
+      // ตรวจสอบว่าผู้ใช้ได้ตั้งค่า biometric credentials แล้วหรือไม่
       const isEnrolled = await LocalAuthentication.isEnrolledAsync();
       if (!isEnrolled) {
         throw new Error('No biometric credentials enrolled');
       }
 
+      // ทำ biometric authentication
       const result = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Authenticate to access your portfolio',
-        cancelLabel: 'Cancel',
-        disableDeviceFallback: false,
+        promptMessage: 'Authenticate to access your portfolio',  // ข้อความที่แสดง
+        cancelLabel: 'Cancel',                                   // ปุ่ม cancel
+        disableDeviceFallback: false,                           // อนุญาต fallback เป็น passcode
       });
 
       track('biometric_auth_attempted', { success: result.success });

@@ -1,12 +1,9 @@
 import { Suspense } from 'react';
-import { useTranslations } from 'next-intl';
 import { BasketsList } from '@/components/baskets/baskets-list';
 import { BasketsHeader } from '@/components/baskets/baskets-header';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@basket-fi/ui';
 
 export default function BasketsPage() {
-  const t = useTranslations('baskets');
-
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -28,18 +25,18 @@ function BasketsListSkeleton() {
           <CardContent className="p-6">
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="skeleton h-6 w-32" />
-                <div className="skeleton h-5 w-16" />
+                <div className="h-6 w-32 bg-muted animate-pulse rounded" />
+                <div className="h-5 w-16 bg-muted animate-pulse rounded" />
               </div>
-              <div className="skeleton h-4 w-full" />
-              <div className="skeleton h-4 w-3/4" />
+              <div className="h-4 w-full bg-muted animate-pulse rounded" />
+              <div className="h-4 w-3/4 bg-muted animate-pulse rounded" />
               <div className="flex justify-between items-center">
-                <div className="skeleton h-8 w-24" />
-                <div className="skeleton h-6 w-20" />
+                <div className="h-8 w-24 bg-muted animate-pulse rounded" />
+                <div className="h-6 w-20 bg-muted animate-pulse rounded" />
               </div>
               <div className="flex space-x-2">
-                <div className="skeleton h-8 flex-1" />
-                <div className="skeleton h-8 w-8" />
+                <div className="h-8 flex-1 bg-muted animate-pulse rounded" />
+                <div className="h-8 w-8 bg-muted animate-pulse rounded" />
               </div>
             </div>
           </CardContent>
