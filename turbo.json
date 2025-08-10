@@ -1,6 +1,5 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "description": "Turborepo configuration สำหรับ Basket.fi monorepo - จัดการ build pipeline และ caching",
   "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "build": {

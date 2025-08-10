@@ -1,0 +1,367 @@
+
+> @basket-fi/backend@0.0.0 typecheck /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/backend
+> tsc --noEmit
+
+[96mprisma/seed.ts[0m:[93m1[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'PrismaClient'.
+
+[7m1[0m import { PrismaClient } from '@prisma/client';
+[7m [0m [91m         ~~~~~~~~~~~~[0m
+
+[96mprisma/seed.ts[0m:[93m2[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module 'ethers' or its corresponding type declarations.
+
+[7m2[0m import { ethers } from 'ethers';
+[7m [0m [91m                       ~~~~~~~~[0m
+
+[96msrc/app.module.ts[0m:[93m21[0m:[93m31[0m - [91merror[0m[90m TS2307: [0mCannot find module './baskets/baskets.module' or its corresponding type declarations.
+
+[7m21[0m import { BasketsModule } from './baskets/baskets.module';   // Baskets functionality
+[7m  [0m [91m                              ~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/app.module.ts[0m:[93m22[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module './tokens/tokens.module' or its corresponding type declarations.
+
+[7m22[0m import { TokensModule } from './tokens/tokens.module';     // Tokens functionality
+[7m  [0m [91m                             ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/app.module.ts[0m:[93m23[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module './users/users.module' or its corresponding type declarations.
+
+[7m23[0m import { UsersModule } from './users/users.module';        // Users functionality
+[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/app.module.ts[0m:[93m24[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module './alerts/alerts.module' or its corresponding type declarations.
+
+[7m24[0m import { AlertsModule } from './alerts/alerts.module';     // Alerts functionality
+[7m  [0m [91m                             ~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/auth/auth.service.spec.ts[0m:[93m2[0m:[93m28[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/jwt' or its corresponding type declarations.
+
+[7m2[0m import { JwtService } from '@nestjs/jwt';
+[7m [0m [91m                           ~~~~~~~~~~~~~[0m
+
+[96msrc/auth/auth.service.spec.ts[0m:[93m4[0m:[93m29[0m - [91merror[0m[90m TS2307: [0mCannot find module './auth.service' or its corresponding type declarations.
+
+[7m4[0m import { AuthService } from './auth.service';
+[7m [0m [91m                            ~~~~~~~~~~~~~~~~[0m
+
+[96msrc/auth/auth.service.spec.ts[0m:[93m7[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module 'ethers' or its corresponding type declarations.
+
+[7m7[0m import { ethers } from 'ethers';
+[7m [0m [91m                       ~~~~~~~~[0m
+
+[96msrc/auth/auth.service.spec.ts[0m:[93m158[0m:[93m59[0m - [91merror[0m[90m TS2304: [0mCannot find name 'mockUser'.
+
+[7m158[0m       mockPrismaService.user.findUnique.mockResolvedValue(mockUser);
+[7m   [0m [91m                                                          ~~~~~~~~[0m
+
+[96msrc/baskets/baskets.controller.spec.ts[0m:[93m2[0m:[93m35[0m - [91merror[0m[90m TS2307: [0mCannot find module './baskets.controller' or its corresponding type declarations.
+
+[7m2[0m import { BasketsController } from './baskets.controller';
+[7m [0m [91m                                  ~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/baskets/baskets.controller.spec.ts[0m:[93m3[0m:[93m32[0m - [91merror[0m[90m TS2307: [0mCannot find module './baskets.service' or its corresponding type declarations.
+
+[7m3[0m import { BasketsService } from './baskets.service';
+[7m [0m [91m                               ~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/baskets/baskets.controller.spec.ts[0m:[93m4[0m:[93m50[0m - [91merror[0m[90m TS2307: [0mCannot find module './dto' or its corresponding type declarations.
+
+[7m4[0m import { CreateBasketDto, UpdateBasketDto } from './dto';
+[7m [0m [91m                                                 ~~~~~~~[0m
+
+[96msrc/baskets/baskets.controller.spec.ts[0m:[93m5[0m:[93m30[0m - [91merror[0m[90m TS2307: [0mCannot find module '../auth/guards/jwt-auth.guard' or its corresponding type declarations.
+
+[7m5[0m import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+[7m [0m [91m                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/prisma/prisma.service.ts[0m:[93m13[0m:[93m10[0m - [91merror[0m[90m TS2305: [0mModule '"@prisma/client"' has no exported member 'PrismaClient'.
+
+[7m13[0m import { PrismaClient } from '@prisma/client';
+[7m  [0m [91m         ~~~~~~~~~~~~[0m
+
+[96msrc/prisma/prisma.service.ts[0m:[93m25[0m:[93m16[0m - [91merror[0m[90m TS2339: [0mProperty '$connect' does not exist on type 'PrismaService'.
+
+[7m25[0m     await this.$connect();
+[7m  [0m [91m               ~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m6[0m:[93m28[0m - [91merror[0m[90m TS2307: [0mCannot find module '@nestjs/jwt' or its corresponding type declarations.
+
+[7m6[0m import { JwtService } from '@nestjs/jwt';
+[7m [0m [91m                           ~~~~~~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m7[0m:[93m24[0m - [91merror[0m[90m TS2307: [0mCannot find module 'ethers' or its corresponding type declarations.
+
+[7m7[0m import { ethers } from 'ethers';
+[7m [0m [91m                       ~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m29[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'allocation' does not exist on type 'PrismaService'.
+
+[7m29[0m     await prisma.allocation.deleteMany();
+[7m  [0m [91m                 ~~~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m30[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'basketAsset' does not exist on type 'PrismaService'.
+
+[7m30[0m     await prisma.basketAsset.deleteMany();
+[7m  [0m [91m                 ~~~~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m31[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'basket' does not exist on type 'PrismaService'.
+
+[7m31[0m     await prisma.basket.deleteMany();
+[7m  [0m [91m                 ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m32[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'wallet' does not exist on type 'PrismaService'.
+
+[7m32[0m     await prisma.wallet.deleteMany();
+[7m  [0m [91m                 ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m33[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type 'PrismaService'.
+
+[7m33[0m     await prisma.user.deleteMany();
+[7m  [0m [91m                 ~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m37[0m:[93m31[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type 'PrismaService'.
+
+[7m37[0m     const user = await prisma.user.create({
+[7m  [0m [91m                              ~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m53[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'allocation' does not exist on type 'PrismaService'.
+
+[7m53[0m     await prisma.allocation.deleteMany();
+[7m  [0m [91m                 ~~~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m54[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'basketAsset' does not exist on type 'PrismaService'.
+
+[7m54[0m     await prisma.basketAsset.deleteMany();
+[7m  [0m [91m                 ~~~~~~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m55[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'basket' does not exist on type 'PrismaService'.
+
+[7m55[0m     await prisma.basket.deleteMany();
+[7m  [0m [91m                 ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m56[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'wallet' does not exist on type 'PrismaService'.
+
+[7m56[0m     await prisma.wallet.deleteMany();
+[7m  [0m [91m                 ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m57[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type 'PrismaService'.
+
+[7m57[0m     await prisma.user.deleteMany();
+[7m  [0m [91m                 ~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m80[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m80[0m       const response = await request(app.getHttpServer())
+[7m  [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m111[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m111[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m124[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m124[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m133[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m133[0m       const response = await request(app.getHttpServer())
+[7m   [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m151[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'basket' does not exist on type 'PrismaService'.
+
+[7m151[0m       await prisma.basket.create({
+[7m   [0m [91m                   ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m159[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m159[0m       const response = await request(app.getHttpServer())
+[7m   [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m171[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m171[0m       const response = await request(app.getHttpServer())
+[7m   [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m186[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m186[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m195[0m:[93m40[0m - [91merror[0m[90m TS2339: [0mProperty 'user' does not exist on type 'PrismaService'.
+
+[7m195[0m       const anotherUser = await prisma.user.create({
+[7m   [0m [91m                                       ~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m202[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'basket' does not exist on type 'PrismaService'.
+
+[7m202[0m       const anotherBasket = await prisma.basket.create({
+[7m   [0m [91m                                         ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m210[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m210[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m225[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m225[0m       const response = await request(app.getHttpServer())
+[7m   [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m235[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m235[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m248[0m:[93m30[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m248[0m       const response = await request(app.getHttpServer())
+[7m   [0m [91m                             ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m267[0m:[93m31[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m267[0m       const response1 = await request(app.getHttpServer())
+[7m   [0m [91m                              ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m275[0m:[93m31[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m275[0m       const response2 = await request(app.getHttpServer())
+[7m   [0m [91m                              ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m288[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m288[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m298[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m298[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m304[0m:[93m42[0m - [91merror[0m[90m TS2339: [0mProperty 'basket' does not exist on type 'PrismaService'.
+
+[7m304[0m       const deletedBasket = await prisma.basket.findUnique({
+[7m   [0m [91m                                         ~~~~~~[0m
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m312[0m:[93m13[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m312[0m       await request(app.getHttpServer())
+[7m   [0m [91m            ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+[96mtest/baskets.e2e-spec.ts[0m:[93m333[0m:[93m9[0m - [91merror[0m[90m TS2349: [0mThis expression is not callable.
+  Type 'typeof supertest' has no call signatures.
+
+[7m333[0m         request(app.getHttpServer())
+[7m   [0m [91m        ~~~~~~~[0m
+
+  [96mtest/baskets.e2e-spec.ts[0m:[93m3[0m:[93m1[0m
+    [7m3[0m import * as request from 'supertest';
+    [7m [0m [96m~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+    Type originates at this import. A namespace-style import cannot be called or constructed, and will cause a failure at runtime. Consider using a default import or import require here instead.
+
+
+Found 50 errors in 6 files.
+
+Errors  Files
+     2  prisma/seed.ts[90m:1[0m
+     4  src/app.module.ts[90m:21[0m
+     4  src/auth/auth.service.spec.ts[90m:2[0m
+     4  src/baskets/baskets.controller.spec.ts[90m:2[0m
+     2  src/prisma/prisma.service.ts[90m:13[0m
+    34  test/baskets.e2e-spec.ts[90m:6[0m
+[41m[30m ELIFECYCLE [39m[49m [31mCommand failed with exit code 2.[39m

@@ -1,5 +1,5 @@
+/** @type {import('eslint').Linter.Config} */
 module.exports = {
-  root: true,
   extends: [
     "eslint:recommended",
     "@typescript-eslint/recommended",
@@ -16,14 +16,21 @@ module.exports = {
         fixStyle: "inline-type-imports"
       }
     ],
-    "import/consistent-type-specifier-style": ["error", "prefer-inline"]
+    "import/consistent-type-specifier-style": ["error", "prefer-inline"],
+    // Mobile specific
+    'import/no-unresolved': 'off', // Expo handles this
   },
   ignorePatterns: [
     "**/.eslintrc.js",
     "**/*.config.js",
     "**/*.config.cjs",
+    ".expo",
     "dist",
     "node_modules"
   ],
-  reportUnusedDisableDirectives: true
+  reportUnusedDisableDirectives: true,
+  env: {
+    node: true,
+    es6: true,
+  },
 };

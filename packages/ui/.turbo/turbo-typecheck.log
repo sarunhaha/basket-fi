@@ -1,0 +1,4 @@
+
+> @basket-fi/ui@0.0.0 typecheck /Users/sarunseangsomboon/Documents/Projects/basket-fi/packages/ui
+> tsc --noEmit
+

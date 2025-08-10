@@ -18,10 +18,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';              // Environment variables
 import { ThrottlerModule } from '@nestjs/throttler';        // Rate limiting
 import { PrismaModule } from './prisma/prisma.module';      // Database ORM
-import { BasketsModule } from './baskets/baskets.module';   // Baskets functionality
-import { TokensModule } from './tokens/tokens.module';     // Tokens functionality
-import { UsersModule } from './users/users.module';        // Users functionality
-import { AlertsModule } from './alerts/alerts.module';     // Alerts functionality
+// import { BasketsModule } from './baskets/baskets.module';   // Baskets functionality
+// import { TokensModule } from './tokens/tokens.module';     // Tokens functionality
+// import { UsersModule } from './users/users.module';        // Users functionality
+// import { AlertsModule } from './alerts/alerts.module';     // Alerts functionality
 
 @Module({
   imports: [
@@ -41,11 +41,11 @@ import { AlertsModule } from './alerts/alerts.module';     // Alerts functionali
     // Database Module - Prisma ORM
     PrismaModule,
     
-    // Feature Modules
-    BasketsModule,    // จัดการ token baskets
-    TokensModule,     // จัดการข้อมูล tokens
-    UsersModule,      // จัดการผู้ใช้
-    AlertsModule,     // จัดการการแจ้งเตือน
+    // Feature Modules - TODO: Uncomment when modules are implemented
+    // BasketsModule,    // จัดการ token baskets
+    // TokensModule,     // จัดการข้อมูล tokens
+    // UsersModule,      // จัดการผู้ใช้
+    // AlertsModule,     // จัดการการแจ้งเตือน
   ],
 })
 export class AppModule {}

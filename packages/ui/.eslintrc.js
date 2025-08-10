@@ -1,8 +1,22 @@
 module.exports = {
   root: true,
-  extends: ["@basket-fi/config/eslint/base.js"],
-  plugins: ["react", "react-hooks"],
+  extends: [
+    "eslint:recommended",
+    "@typescript-eslint/recommended",
+    "prettier"
+  ],
+  parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint", "import", "react", "react-hooks"],
   rules: {
+    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
+    "@typescript-eslint/consistent-type-imports": [
+      "warn",
+      {
+        prefer: "type-imports",
+        fixStyle: "inline-type-imports"
+      }
+    ],
+    "import/consistent-type-specifier-style": ["error", "prefer-inline"],
     "react/prop-types": "off",
     "react/react-in-jsx-scope": "off"
   },
@@ -10,5 +24,13 @@ module.exports = {
     react: {
       version: "detect"
     }
-  }
+  },
+  ignorePatterns: [
+    "**/.eslintrc.js",
+    "**/*.config.js",
+    "**/*.config.cjs",
+    "dist",
+    "node_modules"
+  ],
+  reportUnusedDisableDirectives: true
 };

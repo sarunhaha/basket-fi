@@ -1,0 +1,4 @@
+
+> @basket-fi/mobile@1.0.0 lint /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/mobile
+> eslint . --ext .js,.jsx,.ts,.tsx
+
