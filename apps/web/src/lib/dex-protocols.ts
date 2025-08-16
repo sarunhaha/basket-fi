@@ -21,18 +21,24 @@ export interface DEXProtocol {
  * Interface สำหรับข้อมูล Liquidity Pool
  * Liquidity Pool = กองเงินที่ใช้สำหรับการแลกเปลี่ยน tokens
  */
+/**
+ * Interface สำหรับข้อมูล Token
+ */
+export interface TokenInfo {
+  address: string;              // Contract address ของ token
+  symbol: string;               // สัญลักษณ์ เช่น "ETH", "USDC"
+  decimals: number;             // จำนวนทศนิยม เช่น 18 สำหรับ ETH
+  name: string;                 // ชื่อเต็มของ token เช่น "Ethereum", "USD Coin"
+}
+
+/**
+ * Interface สำหรับข้อมูล Liquidity Pool
+ * Liquidity Pool = กองเงินที่ใช้สำหรับการแลกเปลี่ยน tokens
+ */
 export interface LiquidityPool {
   address: string;                // Contract address ของ pool
-  token0: {                       // Token แรกใน pool
-    address: string;              // Contract address ของ token
-    symbol: string;               // สัญลักษณ์ เช่น "ETH", "USDC"
-    decimals: number;             // จำนวนทศนิยม เช่น 18 สำหรับ ETH
-  };
-  token1: {                       // Token ที่สองใน pool
-    address: string;
-    symbol: string;
-    decimals: number;
-  };
+  token0: TokenInfo;              // Token แรกใน pool
+  token1: TokenInfo;              // Token ที่สองใน pool
   reserve0: string;               // จำนวน token0 ที่มีใน pool (เป็น string เพราะเป็นเลขใหญ่)
   reserve1: string;               // จำนวน token1 ที่มีใน pool
   totalSupply: string;            // จำนวน LP tokens ทั้งหมดที่ออกให้

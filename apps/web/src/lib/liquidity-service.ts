@@ -5,7 +5,7 @@
 
 import { createPublicClient, http, getContract } from 'viem';
 import { monadTestnet } from './chains';
-import { MONAD_TESTNET_DEX_PROTOCOLS, LiquidityPool } from './dex-protocols';
+import { MONAD_TESTNET_DEX_PROTOCOLS, LiquidityPool, TokenInfo } from './dex-protocols';
 
 /**
  * ABI (Application Binary Interface) สำหรับ Uniswap V2 Factory Contract
@@ -87,7 +87,7 @@ const PAIR_ABI = [
 
 /**
  * ABI สำหรับ ERC20 Token Contract
- * ใช้ดูข้อมูลพื้นฐานของ token เช่น symbol, decimals
+ * ใช้ดูข้อมูลพื้นฐานของ token เช่น symbol, decimals, name
  */
 const ERC20_ABI = [
   {
@@ -103,6 +103,14 @@ const ERC20_ABI = [
     inputs: [],
     name: 'decimals',
     outputs: [{ name: '', type: 'uint8' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    // Function: ดูชื่อเต็มของ token เช่น "Ethereum", "USD Coin"
+    inputs: [],
+    name: 'name',
+    outputs: [{ name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function'
   }
@@ -168,7 +176,12 @@ export class LiquidityService {
     return pools; // Return pools ที่พบทั้งหมด
   }
 
-  // ดึงข้อมูล pool
+  /**
+   * ดึงข้อมูลของ liquidity pool
+   * @param pairAddress Address ของ pool contract
+   * @param protocolName ชื่อ DEX protocol
+   * @returns ข้อมูล pool หรือ null ถ้าเกิด error
+   */
   private async getPoolData(pairAddress: string, protocolName: string): Promise<LiquidityPool | null> {
     try {
       const pair = getContract({
@@ -184,10 +197,27 @@ export class LiquidityService {
         pair.read.totalSupply()
       ]);
 
-      // ดึงข้อมูล token
+      // ดึงข้อมูล token พร้อม error handling
       const [token0Data, token1Data] = await Promise.all([
-        this.getTokenData(token0Address),
-        this.getTokenData(token1Address)
+        this.getTokenData(token0Address).catch(error => {
+          console.warn(`Failed to get token0 data for ${token0Address}:`, error);
+          // Return fallback data ถ้าดึงข้อมูล token ไม่ได้
+          return {
+            address: token0Address,
+            symbol: 'UNKNOWN',
+            decimals: 18,
+            name: 'Unknown Token'
+          };
+        }),
+        this.getTokenData(token1Address).catch(error => {
+          console.warn(`Failed to get token1 data for ${token1Address}:`, error);
+          return {
+            address: token1Address,
+            symbol: 'UNKNOWN',
+            decimals: 18,
+            name: 'Unknown Token'
+          };
+        })
       ]);
 
       return {
@@ -201,29 +231,127 @@ export class LiquidityService {
         protocol: protocolName
       };
     } catch (error) {
-      console.error('Failed to get pool data:', error);
+      console.error(`Failed to get pool data for ${pairAddress}:`, error);
       return null;
     }
   }
 
-  // ดึงข้อมูล token
-  private async getTokenData(tokenAddress: string) {
-    const token = getContract({
-      address: tokenAddress as `0x${string}`,
-      abi: ERC20_ABI,
-      client: this.client
+  /**
+   * ดึงข้อมูล ERC20 token พร้อมการ validate และ sanitize
+   * @param tokenAddress Address ของ token ที่ต้องการดึงข้อมูล
+   * @returns ข้อมูล token หรือ throw error ถ้าไม่ valid
+   */
+  async getTokenData(tokenAddress: string): Promise<TokenInfo> {
+    // Validate และ sanitize token address
+    const sanitizedAddress = this.validateAndSanitizeTokenAddress(tokenAddress);
+    
+    try {
+      const token = getContract({
+        address: sanitizedAddress,
+        abi: ERC20_ABI,
+        client: this.client
+      });
+
+      // ดึงข้อมูลพื้นฐานของ token
+      const [symbol, decimals, name] = await Promise.all([
+        token.read.symbol().catch(() => 'UNKNOWN'), // ถ้าไม่มี symbol ให้ใช้ UNKNOWN
+        token.read.decimals().catch(() => 18),      // ถ้าไม่มี decimals ให้ใช้ 18 (default)
+        // เพิ่ม name field สำหรับข้อมูลเพิ่มเติม
+        this.getTokenName(token).catch(() => 'Unknown Token')
+      ]);
+
+      return {
+        address: sanitizedAddress,
+        symbol: symbol as string,
+        decimals: decimals as number,
+        name: name as string
+      };
+    } catch (error) {
+      // Handle different types of errors
+      if (error instanceof Error) {
+        if (error.message.includes('execution reverted')) {
+          throw new Error(`Token at address ${sanitizedAddress} is not a valid ERC20 token`);
+        }
+        if (error.message.includes('call exception')) {
+          throw new Error(`Token at address ${sanitizedAddress} does not exist or is not accessible`);
+        }
+      }
+      
+      throw new Error(`Failed to retrieve token data for ${sanitizedAddress}: ${error}`);
+    }
+  }
+
+  /**
+   * Validate token address (public method)
+   * @param address Token address ที่ต้องการ validate
+   * @returns true ถ้า valid, false ถ้าไม่ valid
+   */
+  isValidTokenAddress(address: string): boolean {
+    try {
+      this.validateAndSanitizeTokenAddress(address);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Validate และ sanitize token address
+   * @param address Token address ที่ต้องการ validate
+   * @returns Sanitized address หรือ throw error ถ้าไม่ valid
+   */
+  private validateAndSanitizeTokenAddress(address: string): `0x${string}` {
+    if (!address) {
+      throw new Error('Token address is required');
+    }
+
+    // Remove whitespace และแปลงเป็น lowercase
+    const sanitized = address.trim().toLowerCase();
+
+    // ตรวจสอบว่าเป็น hex address format
+    if (!/^0x[a-f0-9]{40}$/i.test(sanitized)) {
+      throw new Error(`Invalid token address format: ${address}. Address must be a valid Ethereum address (0x followed by 40 hex characters)`);
+    }
+
+    // ตรวจสอบว่าไม่ใช่ zero address
+    if (sanitized === '0x0000000000000000000000000000000000000000') {
+      throw new Error('Token address cannot be the zero address');
+    }
+
+    return sanitized as `0x${string}`;
+  }
+
+  /**
+   * ดึงข้อมูล tokens หลายตัวพร้อมกัน (batch processing)
+   * @param tokenAddresses Array ของ token addresses
+   * @returns Array ของ token data หรือ null ถ้า token ไม่ valid
+   */
+  async getBatchTokenData(tokenAddresses: string[]): Promise<(TokenInfo | null)[]> {
+    const promises = tokenAddresses.map(async (address) => {
+      try {
+        return await this.getTokenData(address);
+      } catch (error) {
+        console.warn(`Failed to get token data for ${address}:`, error);
+        return null;
+      }
     });
 
-    const [symbol, decimals] = await Promise.all([
-      token.read.symbol(),
-      token.read.decimals()
-    ]);
+    return Promise.all(promises);
+  }
 
-    return {
-      address: tokenAddress,
-      symbol,
-      decimals
-    };
+  /**
+   * ดึงชื่อของ token (optional field)
+   * @param tokenContract Contract instance ของ token
+   * @returns ชื่อของ token หรือ undefined ถ้าไม่มี
+   */
+  private async getTokenName(tokenContract: any): Promise<string | undefined> {
+    try {
+      // บาง tokens อาจไม่มี name function
+      return await tokenContract.read.name();
+    } catch {
+      // ถ้าไม่มี name function ให้ return undefined
+      return undefined;
+    }
   }
 
   // ดึง all pools จาก factory
@@ -271,23 +399,42 @@ export class LiquidityService {
     return pools;
   }
 
-  // คำนวณ price impact
+  /**
+   * คำนวณ price impact สำหรับการ swap
+   * Compatible with ES5 - ใช้ string arithmetic
+   * @param inputAmount จำนวน token ที่จะ swap (as string)
+   * @param inputReserve reserve ของ input token (as string)
+   * @param outputReserve reserve ของ output token (as string)
+   * @returns price impact เป็น percentage
+   */
   calculatePriceImpact(
-    inputAmount: bigint,
-    inputReserve: bigint,
-    outputReserve: bigint
+    inputAmount: string,
+    inputReserve: string,
+    outputReserve: string
   ): number {
-    const inputAmountWithFee = inputAmount * 997n; // 0.3% fee
-    const numerator = inputAmountWithFee * outputReserve;
-    const denominator = inputReserve * 1000n + inputAmountWithFee;
-    const outputAmount = numerator / denominator;
+    try {
+      // ใช้ JavaScript Number สำหรับการคำนวณ (อาจมีความแม่นยำน้อยกว่า BigInt)
+      const inputAmountNum = parseFloat(inputAmount);
+      const inputReserveNum = parseFloat(inputReserve);
+      const outputReserveNum = parseFloat(outputReserve);
 
-    const priceWithoutImpact = (inputAmount * outputReserve) / inputReserve;
-    const priceImpact = Number(
-      ((priceWithoutImpact - outputAmount) * 10000n) / priceWithoutImpact
-    ) / 100;
+      // คำนวณ output amount ด้วย Uniswap V2 formula
+      const inputAmountWithFee = inputAmountNum * 0.997; // 0.3% fee
+      const numerator = inputAmountWithFee * outputReserveNum;
+      const denominator = inputReserveNum + inputAmountWithFee;
+      const outputAmount = numerator / denominator;
 
-    return priceImpact;
+      // คำนวณ price without impact
+      const priceWithoutImpact = (inputAmountNum * outputReserveNum) / inputReserveNum;
+      
+      // คำนวณ price impact
+      const priceImpact = ((priceWithoutImpact - outputAmount) / priceWithoutImpact) * 100;
+
+      return Math.max(0, priceImpact); // ไม่ให้เป็นค่าลบ
+    } catch (error) {
+      console.error('Error calculating price impact:', error);
+      return 0;
+    }
   }
 }
 

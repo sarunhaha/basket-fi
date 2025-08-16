@@ -140,8 +140,103 @@ export function generateId(): string {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 }
 
+/**
+ * ตรวจสอบว่า address เป็น Ethereum address ที่ valid หรือไม่
+ */
 export function isValidEthereumAddress(address: string): boolean {
   return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+/**
+ * ตรวจสอบว่า address เป็น token address ที่ valid หรือไม่
+ * (เหมือน isValidEthereumAddress แต่มีการตรวจสอบเพิ่มเติม)
+ */
+export function isValidTokenAddress(address: string): boolean {
+  if (!address || typeof address !== 'string') {
+    return false;
+  }
+
+  const trimmed = address.trim();
+  
+  // ตรวจสอบ format
+  if (!isValidEthereumAddress(trimmed)) {
+    return false;
+  }
+
+  // ตรวจสอบว่าไม่ใช่ zero address
+  if (trimmed.toLowerCase() === '0x0000000000000000000000000000000000000000') {
+    return false;
+  }
+
+  return true;
+}
+
+/**
+ * Sanitize token address (remove whitespace, convert to lowercase)
+ */
+export function sanitizeTokenAddress(address: string): string {
+  if (!address) return '';
+  return address.trim().toLowerCase();
+}
+
+/**
+ * Format token amount ตาม decimals ของ token
+ * Compatible with ES5 - ใช้ string arithmetic แทน BigInt
+ */
+export function formatTokenAmount(
+  amount: string,
+  decimals: number,
+  displayDecimals: number = 4
+): string {
+  try {
+    // ใช้ string manipulation แทน BigInt เพื่อ compatibility
+    const amountStr = amount.toString();
+    
+    // ถ้า amount สั้นกว่า decimals ให้ pad ด้วย 0
+    const paddedAmount = amountStr.padStart(decimals + 1, '0');
+    
+    // แยก whole part และ fractional part
+    const wholePartEnd = paddedAmount.length - decimals;
+    const wholePart = paddedAmount.slice(0, wholePartEnd) || '0';
+    const fractionalPart = paddedAmount.slice(wholePartEnd);
+    
+    // ถ้าไม่มี fractional part หรือเป็น 0 ทั้งหมด
+    if (!fractionalPart || fractionalPart.match(/^0+$/)) {
+      return wholePart;
+    }
+    
+    // Trim fractional part ตาม displayDecimals และเอา trailing zeros ออก
+    const trimmedFractional = fractionalPart
+      .slice(0, displayDecimals)
+      .replace(/0+$/, '');
+    
+    if (trimmedFractional === '') {
+      return wholePart;
+    }
+    
+    return `${wholePart}.${trimmedFractional}`;
+  } catch (error) {
+    console.error('Error formatting token amount:', error);
+    return '0';
+  }
+}
+
+/**
+ * Parse token amount string เป็น string representation ตาม decimals
+ * Compatible with ES5 - return string แทน BigInt
+ */
+export function parseTokenAmount(amount: string, decimals: number): string {
+  try {
+    const [wholePart, fractionalPart = ''] = amount.split('.');
+    const paddedFractional = fractionalPart.padEnd(decimals, '0').slice(0, decimals);
+    const fullAmount = wholePart + paddedFractional;
+    
+    // Remove leading zeros แต่เก็บอย่างน้อย 1 digit
+    return fullAmount.replace(/^0+/, '') || '0';
+  } catch (error) {
+    console.error('Error parsing token amount:', error);
+    return '0';
+  }
 }
 
 export function truncateText(text: string, maxLength: number): string {

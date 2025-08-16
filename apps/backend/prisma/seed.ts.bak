@@ -1,6 +1,11 @@
 import { PrismaClient } from '@prisma/client';
 import { ethers } from 'ethers';
 
+// Helper function for generating random transaction hash (ethers v6 compatible)
+function generateRandomTxHash(): string {
+  return '0x' + ethers.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+}
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -294,7 +299,7 @@ async function main() {
         status: 'CONFIRMED',
         amount: '1000.00',
         tokenAddress: tokens[0].address,
-        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        transactionHash: generateRandomTxHash(),
         gasUsed: '21000',
         gasPrice: '20000000000',
       },
@@ -305,7 +310,7 @@ async function main() {
         status: 'CONFIRMED',
         amount: '500.00',
         tokenAddress: tokens[1].address,
-        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        transactionHash: generateRandomTxHash(),
         gasUsed: '150000',
         gasPrice: '25000000000',
       },
@@ -341,7 +346,7 @@ async function main() {
           },
         ]),
         estimatedGas: '0.005',
-        transactionHash: '0x' + ethers.utils.randomBytes(32).reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), ''),
+        transactionHash: generateRandomTxHash(),
         executedAt: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
       },
       {

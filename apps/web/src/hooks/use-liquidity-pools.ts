@@ -7,7 +7,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { liquidityService } from '@/lib/liquidity-service';
-import { LiquidityPool } from '@/lib/dex-protocols';
+import { LiquidityPool, TokenInfo } from '@/lib/dex-protocols';
 
 /**
  * Hook สำหรับดึงข้อมูล liquidity pools ทั้งหมด
@@ -60,10 +60,10 @@ export function usePoolData(pools: LiquidityPool[]) {
   const topPools = pools
     .sort((a, b) => {
       // เรียงตาม liquidity (reserve0 + reserve1)
-      // ใช้ BigInt เพราะตัวเลขใหญ่มาก
-      const aLiquidity = BigInt(a.reserve0) + BigInt(a.reserve1);
-      const bLiquidity = BigInt(b.reserve0) + BigInt(b.reserve1);
-      return bLiquidity > aLiquidity ? 1 : -1; // เรียงจากมากไปน้อย
+      // ใช้ parseFloat สำหรับ ES5 compatibility
+      const aLiquidity = parseFloat(a.reserve0) + parseFloat(a.reserve1);
+      const bLiquidity = parseFloat(b.reserve0) + parseFloat(b.reserve1);
+      return bLiquidity - aLiquidity; // เรียงจากมากไปน้อย
     })
     .slice(0, 10); // เอาแค่ 10 อันดับแรก
 
@@ -72,4 +72,45 @@ export function usePoolData(pools: LiquidityPool[]) {
     topPools,              // Top 10 pools
     totalPools: pools.length, // จำนวน pools ทั้งหมด
   };
+}
+
+/**
+ * Hook สำหรับดึงข้อมูล token เดี่ยว
+ * @param tokenAddress Address ของ token ที่ต้องการดึงข้อมูล
+ * @returns Query result พร้อมข้อมูล token
+ */
+export function useTokenData(tokenAddress?: string) {
+  return useQuery({
+    queryKey: ['token-data', tokenAddress],
+    queryFn: () => {
+      if (!tokenAddress) return Promise.resolve(null);
+      return liquidityService.getTokenData(tokenAddress);
+    },
+    enabled: !!tokenAddress && liquidityService.isValidTokenAddress(tokenAddress || ''),
+    staleTime: 300000, // Token data ไม่เปลี่ยนบ่อย cache 5 นาที
+    retry: (failureCount, error) => {
+      // ไม่ retry ถ้าเป็น validation error
+      if (error instanceof Error && error.message.includes('Invalid token address')) {
+        return false;
+      }
+      return failureCount < 2; // Retry สูงสุด 2 ครั้ง
+    },
+  });
+}
+
+/**
+ * Hook สำหรับดึงข้อมูล tokens หลายตัวพร้อมกัน
+ * @param tokenAddresses Array ของ token addresses
+ * @returns Query result พร้อมข้อมูล tokens
+ */
+export function useBatchTokenData(tokenAddresses: string[]) {
+  return useQuery({
+    queryKey: ['batch-token-data', tokenAddresses.sort()], // Sort เพื่อให้ cache key consistent
+    queryFn: () => {
+      if (tokenAddresses.length === 0) return Promise.resolve([]);
+      return liquidityService.getBatchTokenData(tokenAddresses);
+    },
+    enabled: tokenAddresses.length > 0,
+    staleTime: 300000, // Token data ไม่เปลี่ยนบ่อย cache 5 นาที
+  });
 }

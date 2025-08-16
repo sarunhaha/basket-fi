@@ -15,6 +15,7 @@ model User {
   walletAddress String   @unique
   email         String?  @unique
   displayName   String?
+  role          String   @default("USER") // Added for seed.ts
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -27,6 +28,7 @@ model User {
   // Relations
   baskets       Basket[]
   alerts        Alert[]
+  wallets       Wallet[]
 
   @@map("users")
 }
@@ -37,6 +39,7 @@ model Basket {
   description String?
   totalValue  String?
   isPublic    Boolean  @default(false)
+  isActive    Boolean  @default(true) // Added for seed.ts
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -44,7 +47,9 @@ model Basket {
   userId      String
   user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   allocations TokenAllocation[]
+  basketAssets BasketAsset[]
   alerts      Alert[]
+  rebalances  Rebalance[]
 
   @@map("baskets")
 }
@@ -64,6 +69,7 @@ model Token {
 
   // Relations
   allocations     TokenAllocation[]
+  basketAssets    BasketAsset[]
   priceHistory    TokenPriceHistory[]
   alerts          Alert[]
 
@@ -100,13 +106,15 @@ model TokenPriceHistory {
 }
 
 model Alert {
-  id        String   @id @default(cuid())
-  type      String   // "price", "percentage", "rebalance"
-  condition String   // "above", "below", "change"
-  value     String
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  type        String   // "price", "percentage", "rebalance"
+  condition   String   // "above", "below", "change"
+  value       String
+  isActive    Boolean  @default(true)
+  isTriggered   Boolean  @default(false) // Added for seed.ts
+  lastTriggered DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   // Relations
   userId       String
@@ -117,4 +125,105 @@ model Alert {
   token        Token?  @relation(fields: [tokenAddress], references: [address], onDelete: Cascade)
 
   @@map("alerts")
+}
+
+model Wallet {
+  id            String   @id @default(cuid())
+  address       String   @unique
+  name          String?
+  balance       String   @default("0")
+  chainId       String   @default("1")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  userId        String
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("wallets")
+}
+
+model BasketAsset {
+  id           String   @id @default(cuid())
+  amount       String
+  value        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  basketId     String
+  basket       Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  tokenAddress String
+  token        Token  @relation(fields: [tokenAddress], references: [address], onDelete: Cascade)
+
+  @@unique([basketId, tokenAddress])
+  @@map("basket_assets")
+}
+
+model Allocation {
+  id               String   @id @default(cuid())
+  percentage       Float
+  targetPercentage Float?
+  amount           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  // Relations
+  basketId         String
+  tokenAddress     String
+
+  @@unique([basketId, tokenAddress])
+  @@map("allocations")
+}
+
+model PriceSnapshot {
+  id           String   @id @default(cuid())
+  price        String
+  volume24h    String?
+  timestamp    DateTime @default(now())
+
+  // Relations
+  tokenAddress String
+
+  @@unique([tokenAddress, timestamp])
+  @@map("price_snapshots")
+}
+
+model Transaction {
+  id              String   @id @default(cuid())
+  type            String   // "buy", "sell", "rebalance"
+  amount          String
+  price           String?
+  transactionHash String?
+  status          String   @default("pending") // "pending", "completed", "failed"
+  userId          String?
+  gasUsed         String?
+  gasPrice        String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  basketId        String?
+  tokenAddress    String?
+
+  @@map("transactions")
+}
+
+model Rebalance {
+  id              String   @id @default(cuid())
+  type            String   // "manual", "automatic", "threshold"
+  status          String   @default("pending") // "pending", "completed", "failed"
+  transactionHash String?
+  userId          String?
+  trades          String?  // JSON string
+  estimatedGas    String?
+  executedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations
+  basketId        String
+  basket          Basket @relation(fields: [basketId], references: [id], onDelete: Cascade)
+
+  @@map("rebalances")
 }

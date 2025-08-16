@@ -2,3 +2,181 @@
 > @basket-fi/web@0.0.0 build /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web
 > next build
 
+  [1m[38;2;173;127;168m ▲ Next.js 14.0.3[39m[22m
+   - Environments: .env.local
+
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G[?25h [33m[1m⚠[22m[39m Compiled with warnings
+
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G[?25h../../node_modules/.pnpm/pino@7.11.0/node_modules/pino/lib/tools.js
+Module not found: Can't resolve 'pino-pretty' in '/Users/sarunseangsomboon/Documents/Projects/basket-fi/node_modules/.pnpm/pino@7.11.0/node_modules/pino/lib'
+
+Import trace for requested module:
+../../node_modules/.pnpm/pino@7.11.0/node_modules/pino/lib/tools.js
+../../node_modules/.pnpm/pino@7.11.0/node_modules/pino/pino.js
+../../node_modules/.pnpm/@walletconnect+logger@2.1.2/node_modules/@walletconnect/logger/dist/index.es.js
+../../node_modules/.pnpm/@walletconnect+universal-provider@2.21.1_typescript@5.9.2_zod@3.25.76/node_modules/@walletconnect/universal-provider/dist/index.es.js
+../../node_modules/.pnpm/@walletconnect+ethereum-provider@2.21.1_@types+react@18.2.79_react@18.2.0_typescript@5.9.2_zod@3.25.76/node_modules/@walletconnect/ethereum-provider/dist/index.es.js
+../../node_modules/.pnpm/@wagmi+connectors@5.9.2_@types+react@18.2.79_@wagmi+core@2.19.0_react@18.2.0_typescript@5.9.2_qyqsi5gjprlszvma4i3v3yjsnq/node_modules/@wagmi/connectors/dist/esm/walletConnect.js
+../../node_modules/.pnpm/@wagmi+connectors@5.9.2_@types+react@18.2.79_@wagmi+core@2.19.0_react@18.2.0_typescript@5.9.2_qyqsi5gjprlszvma4i3v3yjsnq/node_modules/@wagmi/connectors/dist/esm/exports/index.js
+../../node_modules/.pnpm/wagmi@2.16.2_@tanstack+react-query@5.84.2_@types+react@18.2.79_react@18.2.0_typescript@5.9.2_viem@2.33.3_zod@3.25.76/node_modules/wagmi/dist/esm/exports/connectors.js
+../../node_modules/.pnpm/@rainbow-me+rainbowkit@2.2.8_@tanstack+react-query@5.84.2_@types+react@18.2.79_react-dom@18.2_zzorbj6gddbfhe5c75vgv3xnxy/node_modules/@rainbow-me/rainbowkit/dist/index.js
+./src/components/wallet-provider.tsx
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G[?25h
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Skipping validation of types
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Skipping linting
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
+[?25l [37m[1m [22m[39m Generating static pages (0/8)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Generating static pages (0/8)  [36m[=   ][39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Generating static pages (0/8)  [36m[==  ][39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39mReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+ReferenceError: indexedDB is not defined
+    at i (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229594)
+    at /Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229737
+    at D (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:229870)
+    at getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:230143)
+    at h (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:228407)
+    at Object.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:231992)
+    at S.getItem (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:236388)
+    at P (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:237661)
+    at new R (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:238230)
+    at new ag (/Users/sarunseangsomboon/Documents/Projects/basket-fi/apps/web/.next/server/chunks/778.js:10:91719)
+[2K[1G[?25h[2K[1G[?25h [32m[1m✓[22m[39m Generating static pages (8/8) 
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m..[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m..[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m..[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m...[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m...[39m[2K[1G [37m[1m [22m[39m Creating an optimized production build  [36m...[39m[2K[1G [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
+[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
+[2K[1G[?25h
+[?25l [37m[1m [22m[39m Creating an optimized production build  [36m.[39m[4mRoute (app)[24m                              [4mSize[24m     [4mFirst Load JS[24m
+┌ ○ /                                    212 B           [33m132 kB[39m
+├ ○ /_not-found                          879 B          [32m87.6 kB[39m
+├ ○ /dashboard                           212 B           [33m132 kB[39m
+├ ○ /dashboard/baskets                   16.6 kB         [31m[1m282 kB[22m[39m
+├ ○ /dashboard/baskets/create            1.46 kB         [31m[1m253 kB[22m[39m
+└ ○ /dashboard/pools                     5.78 kB         [31m[1m336 kB[22m[39m
++ First Load JS shared by all            [32m86.7 kB[39m
+  ├ chunks/6075-2c074d5b56aa13c9.js      28.9 kB
+  ├ chunks/d6320ee9-de051fb462165257.js  53.3 kB
+  ├ chunks/main-app-7635b03ccfffd262.js  228 B
+  └ chunks/webpack-a246ad920fe14011.js   4.3 kB
+
+
+ƒ Middleware                             [32m28.1 kB[39m
+
+○  (Static)  prerendered as static content
+
+[?25h
